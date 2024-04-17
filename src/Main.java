@@ -1,7 +1,11 @@
+import database.DatabaseManager;
+import database.OrderLine;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -15,7 +19,13 @@ public class Main {
         String orderIdString = reader.readLine();
 
         int orderId = Integer.parseInt(orderIdString);
-        databaseManager.getOrderLines(orderId);
+        ArrayList<OrderLine> orderLines = databaseManager.getOrderLines(orderId);
+
+        for (OrderLine orderLine : orderLines) {
+            System.out.printf("id: %s, item: %s\n", orderLine.getOrderID(), orderLine.getStockItemID());
+        }
+
+        databaseManager.closeConnection();
     }
 
 }

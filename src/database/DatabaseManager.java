@@ -1,4 +1,7 @@
+package database;
+
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DatabaseManager {
 
@@ -12,20 +15,26 @@ public class DatabaseManager {
 
     }
 
-    public void getOrderLines(int orderId) throws SQLException {
+    public ArrayList<OrderLine> getOrderLines(int orderId) throws SQLException {
         // Language=MySQL
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM `orderlines` where OrderID = ?");
         statement.setInt(1, orderId);
-
+        ArrayList<OrderLine> orderlines = new ArrayList<>();
         ResultSet rs = statement.executeQuery();
 
-        while(rs.next()) {
-            int id = rs.getInt("OrderID");
-            int itemId = rs.getInt("StockItemID");
-
-            System.out.printf("id: %s, item: %s\n", id, itemId);
+        for (int i = 0; rs.next(); i++) {
+            OrderLine orderLine = new OrderLine();
+            orderLine.setOrderID(rs.getInt("OrderID"));
+            orderLine.setStockItemID(rs.getInt("StockItemID"));
+            orderlines.add(orderLine);
         }
         statement.close();
+
+        return orderlines;
+    }
+
+    public void closeConnection() throws SQLException {
+        connection.close();
     }
 
 }
