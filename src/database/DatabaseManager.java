@@ -1,7 +1,11 @@
 package database;
 
+import entity.OrderLine;
+import entity.StockItem;
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class DatabaseManager {
 
@@ -23,14 +27,28 @@ public class DatabaseManager {
         ResultSet rs = statement.executeQuery();
 
         for (int i = 0; rs.next(); i++) {
+            StockItem stockItem = new StockItem();
+            stockItem.setX(getRandomNumberInRange(1,5));
+            stockItem.setY(getRandomNumberInRange(1,5));
+            stockItem.setStockItemID(rs.getInt("StockItemID"));
             OrderLine orderLine = new OrderLine();
+            orderLine.setStockItem(stockItem);
             orderLine.setOrderID(rs.getInt("OrderID"));
-            orderLine.setStockItemID(rs.getInt("StockItemID"));
             orderlines.add(orderLine);
         }
         statement.close();
 
         return orderlines;
+    }
+
+    private static int getRandomNumberInRange(int min, int max) {
+
+        if (min >= max) {
+            throw new IllegalArgumentException("max must be greater than min");
+        }
+
+        Random r = new Random();
+        return r.nextInt((max - min) + 1) + min;
     }
 
     public void closeConnection() throws SQLException {
