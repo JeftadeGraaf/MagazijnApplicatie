@@ -18,19 +18,19 @@ public class TSPBruteForce {
         return Math.sqrt(Math.pow((double)(c1.getX() - c2.getX()), 2.0) + Math.pow((double)(c1.getY() - c2.getY()), 2.0));
     }
 
-    static double calculateTotalDistance(ArrayList<StockItem> coords, ArrayList<Integer> route) {
+    static double calculateTotalDistance(ArrayList<OrderLine> coords, ArrayList<Integer> route) {
         double totalDistance = 0.0;
 
         for(int i = 0; i < route.size() - 1; ++i) {
-            totalDistance += calculateDistance((StockItem) coords.get((Integer)route.get(i)), (StockItem) coords.get((Integer)route.get(i + 1)));
+            totalDistance += calculateDistance((StockItem) coords.get((Integer)route.get(i)).getStockItem(), (StockItem) coords.get((Integer)route.get(i + 1)).getStockItem());
         }
 
-        totalDistance += calculateDistance((StockItem) coords.get((Integer)route.get(route.size() - 1)), (StockItem) coords.get((Integer)route.get(0)));
+        totalDistance += calculateDistance((StockItem) coords.get((Integer)route.get(route.size() - 1)).getStockItem(), (StockItem) coords.get((Integer)route.get(0)).getStockItem());
         return totalDistance;
     }
 
-    static Pair<Double, ArrayList<Integer>> tspBruteForce(ArrayList<StockItem> coords) {
-        int numProducts = coords.size();
+    static Pair<Double, ArrayList<Integer>> tspBruteForce(ArrayList<OrderLine> orderLines) {
+        int numProducts = orderLines.size();
         ArrayList<Integer> products = new ArrayList();
 
         for(int i = 0; i < numProducts; ++i) {
@@ -41,7 +41,7 @@ public class TSPBruteForce {
         ArrayList<Integer> bestRoute = new ArrayList();
 
         do {
-            double distance = calculateTotalDistance(coords, products);
+            double distance = calculateTotalDistance(orderLines, products);
             if (distance < minDistance) {
                 minDistance = distance;
                 bestRoute = new ArrayList(products);
@@ -80,25 +80,28 @@ public class TSPBruteForce {
     }
 
     public static String getRoute(ArrayList<OrderLine> orderLines) {
-        ArrayList<StockItem> coordinates = new ArrayList();
-        StockItem base = new StockItem();
-        base.setX(0);
-        base.setY(0);
-        coordinates.add(base);
-        for (OrderLine orderLine : orderLines) {
-            coordinates.add(orderLine.getStockItem());
-            System.out.println(orderLine.getStockItem().getX() + ", " + orderLine.getStockItem().getY());
-        }
-        Pair<Double, ArrayList<Integer>> result = tspBruteForce(coordinates);
+        StockItem baseItem = new StockItem();
+        baseItem.setX(0);
+        baseItem.setY(0);
+        OrderLine baseLine = new OrderLine();
+        baseLine.setStockItem(baseItem);
+//        orderLines.add(baseLine);
+        orderLines.addFirst(baseLine);
+        Pair<Double, ArrayList<Integer>> result = tspBruteForce(orderLines);
         System.out.println("Shortest Distance: " + String.valueOf(result.getFirst()));
         System.out.print("Best Path: ");
         Iterator var3 = ((ArrayList)result.getSecond()).iterator();
 
-        String route = "optimal route:";
+        String route = "o";
 
         while(var3.hasNext()) {
             int product = (Integer)var3.next();
-            route = route + product + " ";
+            StockItem stockItem = orderLines.get(product).getStockItem();
+            if (var3.hasNext()) {
+                route = String.format("%s%s.%s,", route, stockItem.getX(), stockItem.getY()) ;
+            } else {
+                route = String.format("%s%s.%s", route, stockItem.getX(), stockItem.getY());
+            }
 //            System.out.print("" + product + " ");
         }
 
