@@ -39,13 +39,28 @@ public class SerialManager implements SerialPortDataListener {
                 for (int i = 0; i < messages.length - 1; i++) {
                     String message = messages[i];
                     System.out.println(message);
+                    char testChar = messages[i].charAt(0);
+                    switch (testChar) {
+                        case 'n':
+                            sendMessage("bn");
+                            break;
+                        case 's':
+                            sendMessage("bs");
+                            break;
+                    }
                 }
-
                 // Reset buffer with any remaining incomplete message
                 messageBuffer.setLength(0);
                 messageBuffer.append(messages[messages.length - 1]);
             }
         }
+
+        String[] messages = messageBuffer.toString().split("\n");
+        if (messages.length > 1) {
+
+        }
+
+
     }
 
     public void sendMessage(String message) {
