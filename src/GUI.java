@@ -17,7 +17,7 @@ public class GUI extends JFrame implements ActionListener {
     OrderBijhouderPanel orderBijhouder;
     RobotLocatieGUI robotLocatie;
     private DatabaseManager databaseManager;
-    private ArrayList<OrderLine> orderLines;
+    private ArrayList<OrderLine> orderLines = new ArrayList<>();
 
     public GUI(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
@@ -59,8 +59,13 @@ public class GUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
         int orderID = order.getOrderID();
-        System.out.println(orderID);
         orderLines = databaseManager.getOrderLines(orderID);
+        if (orderLines.isEmpty()) {
+            OrderLine or = new OrderLine();
+            or.setOrderID(-1);
+            orderLines.clear();
+            orderLines.add(or);
+        }
         orderBijhouder.repaint();
     }
 

@@ -25,6 +25,11 @@ public class OrderBijhouderPanel extends JPanel{
         }
         int x = 20;
         int y = 20;
+        if (orderLines.getFirst().getOrderID() == -1) {
+            g.setColor(Color.RED);
+            g.drawString("Ongeldige invoer", x, y);
+            return;
+        }
         for (OrderLine orderLine : orderLines) {
             g.drawString("OrderID: " + orderLine.getOrderID() + "; ItemID: " + orderLine.getStockItemID(), x, y);
             y += 20;

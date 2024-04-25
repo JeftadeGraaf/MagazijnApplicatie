@@ -43,7 +43,11 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == okButton) {
-            orderID = Integer.parseInt(OrderIDTekstveld.getText());
+            try {
+                orderID = Integer.parseInt(OrderIDTekstveld.getText());
+            } catch (NumberFormatException ex) {
+                orderID = -1;
+            }
         }
         dispose();
     }
