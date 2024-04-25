@@ -1,3 +1,5 @@
+import database.DatabaseManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,6 +11,8 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
     private JLabel LabelOrderID;
     private JLabel placeholder2;
     private JTextField OrderIDTekstveld;
+
+    private int orderID;
 
     //private JTextField placeholder2a;
     public OrderIDInvullenDialog(JFrame frame, boolean modaal){
@@ -38,6 +42,13 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == okButton) {
+            orderID = Integer.parseInt(OrderIDTekstveld.getText());
+        }
         dispose();
+    }
+
+    public int getOrderID() {
+        return orderID;
     }
 }

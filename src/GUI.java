@@ -1,6 +1,10 @@
+import database.DatabaseManager;
+import database.OrderLine;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class GUI extends JFrame implements ActionListener {
     private JButton orderInladen;
@@ -9,21 +13,25 @@ public class GUI extends JFrame implements ActionListener {
     private JButton orderVerwerken;
     private JLabel status;
 
-
     JLabel testerVoorStatusVerwijderLater;
     OrderBijhouderPanel orderBijhouder;
     RobotLocatieGUI robotLocatie;
-    public GUI() {
+    private DatabaseManager databaseManager;
+    private ArrayList<OrderLine> orderLines;
+
+    public GUI(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
         setLayout(null);
         setSize(854, 580);
         setTitle("HMI Applicatie");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         orderAapassen = new JButton("Order aanpassen");
         orderAanmaken = new JButton("Order aannmaken");
         orderInladen= new JButton("Order inladen");
         orderVerwerken = new JButton("Order verwerken");
         testerVoorStatusVerwijderLater = new JLabel("handmatig");
         status = new JLabel("Status:");
-        orderBijhouder = new OrderBijhouderPanel();
+        orderBijhouder = new OrderBijhouderPanel(this);
         robotLocatie = new RobotLocatieGUI();
         orderInladen.setBounds(400,25,135,25);
         orderBijhouder.setBounds(400,60,400,300);
@@ -47,12 +55,18 @@ public class GUI extends JFrame implements ActionListener {
 
     }
 
-    public static void main(String[] args) {
-        GUI gui = new GUI();
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
+        int orderID = order.getOrderID();
+        System.out.println(orderID);
+        orderLines = databaseManager.getOrderLines(orderID);
+        orderBijhouder.repaint();
     }
+
+    public ArrayList<OrderLine> getOrderLines() {
+        return orderLines;
+    }
+
+
 }
