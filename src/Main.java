@@ -1,5 +1,5 @@
 import database.DatabaseManager;
-import database.OrderLine;
+import entity.OrderLine;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,8 +22,12 @@ public class Main {
         ArrayList<OrderLine> orderLines = databaseManager.getOrderLines(orderId);
 
         for (OrderLine orderLine : orderLines) {
-            System.out.printf("id: %s, item: %s\n", orderLine.getOrderID(), orderLine.getStockItemID());
+            System.out.printf("id: %s, item: %s\n", orderLine.getOrderID(), orderLine.getStockItem().getStockItemID());
         }
+
+        String route = TSPBruteForce.getRoute(orderLines);
+
+        System.out.println(route);
 
         databaseManager.closeConnection();
     }
