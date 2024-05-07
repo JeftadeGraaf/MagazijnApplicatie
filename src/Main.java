@@ -9,6 +9,7 @@ public class Main {
         DatabaseManager databaseManager = new DatabaseManager();
         GUI gui = new GUI(databaseManager);
 
+        databaseManager.closeConnection();
     }
 
 }
