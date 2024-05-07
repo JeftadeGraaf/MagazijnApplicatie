@@ -1,4 +1,4 @@
-import database.OrderLine;
+import entity.OrderLine;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +31,7 @@ public class OrderBijhouderPanel extends JPanel{
             return;
         }
         for (OrderLine orderLine : orderLines) {
-            g.drawString("OrderID: " + orderLine.getOrderID() + "; ItemID: " + orderLine.getStockItemID(), x, y);
+            g.drawString("OrderID: " + orderLine.getOrderID() + "; ItemID: " + orderLine.getStockItem().getStockItemID(), x, y);
             y += 20;
         }
     }
