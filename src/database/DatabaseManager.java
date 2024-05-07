@@ -36,9 +36,6 @@ public class DatabaseManager {
             orderLine.setOrderID(rs.getInt("OrderID"));
             orderlines.add(orderLine);
         }
-        statement.close();
-
-        return orderlines;
     }
 
     private static int getRandomNumberInRange(int min, int max) {
