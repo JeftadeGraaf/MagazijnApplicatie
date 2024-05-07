@@ -19,22 +19,28 @@ public class DatabaseManager {
 
     }
 
-    public ArrayList<OrderLine> getOrderLines(int orderId) throws SQLException {
-        // Language=MySQL
-        PreparedStatement statement = connection.prepareStatement("SELECT * FROM `orderlines` where OrderID = ?");
-        statement.setInt(1, orderId);
-        ArrayList<OrderLine> orderlines = new ArrayList<>();
-        ResultSet rs = statement.executeQuery();
+    public ArrayList<OrderLine> getOrderLines(int orderId) {
+        try {
+            // Language=MySQL
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `orderlines` where OrderID = ?");
+            statement.setInt(1, orderId);
+            ArrayList<OrderLine> orderlines = new ArrayList<>();
+            ResultSet rs = statement.executeQuery();
 
-        for (int i = 0; rs.next(); i++) {
-            StockItem stockItem = new StockItem();
-            stockItem.setX(getRandomNumberInRange(1,5));
-            stockItem.setY(getRandomNumberInRange(1,5));
-            stockItem.setStockItemID(rs.getInt("StockItemID"));
-            OrderLine orderLine = new OrderLine();
-            orderLine.setStockItem(stockItem);
-            orderLine.setOrderID(rs.getInt("OrderID"));
-            orderlines.add(orderLine);
+            for (int i = 0; rs.next(); i++) {
+                StockItem stockItem = new StockItem();
+                stockItem.setX(getRandomNumberInRange(1, 5));
+                stockItem.setY(getRandomNumberInRange(1, 5));
+                stockItem.setStockItemID(rs.getInt("StockItemID"));
+                OrderLine orderLine = new OrderLine();
+                orderLine.setStockItem(stockItem);
+                orderLine.setOrderID(rs.getInt("OrderID"));
+                orderlines.add(orderLine);
+            }
+
+            return orderlines;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

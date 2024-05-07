@@ -1,5 +1,5 @@
 import database.DatabaseManager;
-import database.OrderLine;
+import entity.OrderLine;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
