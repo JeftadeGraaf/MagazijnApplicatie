@@ -79,6 +79,7 @@ public class GUI extends JFrame implements ActionListener {
         if(e.getSource().equals(orderAanpassen)){
             if(loadedOrderID != 0){
                 new updateOrderDialog(this, true, loadedOrderID, orderLines, databaseManager);
+                orderLines = databaseManager.getOrderLines(loadedOrderID);
             }
         }
         orderBijhouder.repaint();

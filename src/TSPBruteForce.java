@@ -75,7 +75,7 @@ public class TSPBruteForce {
     }
 
     public static String getRoute(ArrayList<OrderLine> orderLines) {
-        StockItem baseItem = new StockItem();
+        StockItem baseItem = new StockItem(1, 0, 0);
         baseItem.setX(0);
         baseItem.setY(0);
         OrderLine baseLine = new OrderLine();
@@ -97,7 +97,6 @@ public class TSPBruteForce {
             } else {
                 route = String.format("%s%s.%s", route, stockItem.getX(), stockItem.getY());
             }
-//            System.out.print("" + product + " ");
         }
 
         return route;

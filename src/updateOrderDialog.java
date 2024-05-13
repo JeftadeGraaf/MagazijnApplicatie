@@ -1,5 +1,7 @@
+import com.mysql.cj.x.protobuf.MysqlxCrud;
 import database.DatabaseManager;
 import entity.OrderLine;
+import entity.StockItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,14 +65,47 @@ public class updateOrderDialog extends JDialog implements ActionListener {
         cancelButton.setBounds(350, 200, 100, 25);
         add(cancelButton);
 
+        cancelButton.addActionListener(this);
+        addButton.addActionListener(this);
         setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (int i = 0; i < buttonArray.size(); i++) {
-            if(e.getSource().equals(buttonArray.get(i))){
-                databaseManager.removeOrderLine(orderID, orderLines.get(i).getOrderID());
+        if(e.getSource().equals(cancelButton)){
+            dispose();
+        } else if (e.getSource().equals(addButton)){
+            try{
+                int itemID = Integer.parseInt(addText.getText());
+                databaseManager.addProductToOrder(orderID, itemID);
+                OrderLine orderLine = new OrderLine();
+                orderLine.setOrderID(orderID);
+                int[] itemCoordinates = databaseManager.getItemRackLocation(itemID);
+                orderLine.setStockItem(new StockItem(Integer.parseInt(addText.getText()), itemCoordinates[0], itemCoordinates[1]));
+                orderLines.add(orderLine);
+                scrollFrame.add(new JLabel("Product " + itemID));
+                scrollFrame.add(new JButton("Verwijder"));
+                scrollFrame.revalidate();
+                scrollFrame.repaint();
+            } catch(NumberFormatException numberFormatException){
+                addText.setText("Ongeldige ingave!");
+            }
+        } else {
+            for (int i = 0; i < buttonArray.size(); i++) {
+                if (e.getSource().equals(buttonArray.get(i))){
+                    databaseManager.removeOrderLine(orderID, orderLines.get(i).getStockItem().getStockItemID());
+                    // Updating the orderLines list
+                    orderLines.remove(i);
+                    // Removing the corresponding button and label
+                    scrollFrame.remove(buttonArray.get(i));
+                    scrollFrame.remove(i * 2);
+                    // Removing the button from buttonArray
+                    buttonArray.remove(i);
+                    // Refreshing the panel
+                    scrollFrame.revalidate();
+                    scrollFrame.repaint();
+                    break;
+                }
             }
         }
     }
