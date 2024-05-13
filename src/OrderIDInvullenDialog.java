@@ -22,16 +22,11 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
         setLayout(new FlowLayout(10,30,30));
         OrderIDTekstveld = new JTextField();
         LabelOrderID = new JLabel("Vul in orderID:");
-        //placeholder2 = new JLabel("vul in placeholder2");
-        //placeholder2a = new JTextField();
         OrderIDTekstveld.setColumns(8);
-        //placeholder2a.setColumns(2);
         annuleren = new JButton("Annuleren");
         okButton = new JButton("OK");
         add(LabelOrderID);
         add(OrderIDTekstveld);
-        //add(placeholder2);
-        //add(placeholder2a);
         add(annuleren);
         add(okButton);
         okButton.addActionListener(this);

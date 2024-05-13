@@ -1,9 +1,17 @@
 package entity;
 
+import java.net.SocketTimeoutException;
+
 public class StockItem {
 
     private int stockItemID;
     private int x, y;
+
+    public StockItem(int stockItemID, int x, int y){
+        this.stockItemID = stockItemID;
+        this.x = x;
+        this.y = y;
+    }
 
     public int getStockItemID() {
         return stockItemID;
