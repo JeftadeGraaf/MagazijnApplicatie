@@ -44,6 +44,17 @@ public class DatabaseManager {
         }
     }
 
+    public void removeOrderLine(int orderId, int orderLineID){
+        try {
+            // Language=MySQL
+            PreparedStatement statement = connection.prepareStatement("DELETE FROM orderlines WHERE OrderID = ? AND OrderLineID = ?");
+            statement.setInt(1, orderId);
+            statement.setInt(2, orderLineID);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static int getRandomNumberInRange(int min, int max) {
 
         if (min >= max) {
