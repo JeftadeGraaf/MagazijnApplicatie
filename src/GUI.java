@@ -4,7 +4,6 @@ import entity.OrderLine;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class GUI extends JFrame {
@@ -16,7 +15,6 @@ public class GUI extends JFrame {
 
     private int loadedOrderID = 0;
 
-    JLabel testerVoorStatusVerwijderLater;
     OrderBijhouderPanel orderBijhouder;
     RobotLocatieGUI robotLocatie;
     private DatabaseManager databaseManager;
@@ -74,7 +72,11 @@ public class GUI extends JFrame {
             or.setOrderID(-1);
             orderLines.clear();
             orderLines.add(or);
+            orderAanpassen.setEnabled(false);
+            orderVerwerken.setEnabled(false);
         }
+        robotLocatie.repaint();
+        orderBijhouder.repaint();
     }
 
     public void clickedOrderChange(ActionEvent e){
@@ -82,10 +84,14 @@ public class GUI extends JFrame {
             new updateOrderDialog(this, true, loadedOrderID, orderLines, databaseManager);
             orderLines = databaseManager.getOrderLines(loadedOrderID);
         }
+        robotLocatie.repaint();
+        orderBijhouder.repaint();
     }
 
     public void clickedOrderAdded(ActionEvent e){
         OrderAddDialog addDialog = new OrderAddDialog(this, true);
+        robotLocatie.repaint();
+        orderBijhouder.repaint();
     }
 
     public ArrayList<OrderLine> getOrderLines() {
