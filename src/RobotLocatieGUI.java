@@ -27,8 +27,10 @@ public class RobotLocatieGUI extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.lightGray);
+        g.setColor(Color.black);
         g.fillRect(0,400,450,150);
+        g.setColor(Color.lightGray);
+        g.fillRect(2,402,446,146);
         drawPackageIconLarge(g, Color.red, 40, 440);
         drawPackageIconLarge(g, Color.green, 40, 500);
         drawRackGrid(g);
@@ -36,10 +38,11 @@ public class RobotLocatieGUI extends JPanel{
 
     public void drawRackGrid(Graphics g){
         g.setColor(Color.black);
-        int cellSize = 70;
-        int x = 50;
+        int cellSize = 65;
+        int x = 30;
         int y = 25;
-
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setStroke(new BasicStroke(2));
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 g.drawRect(x, y, cellSize, cellSize);
@@ -48,6 +51,7 @@ public class RobotLocatieGUI extends JPanel{
             x += cellSize;
             y = 25;
         }
+        g.drawRect(355, 285, cellSize, cellSize);
     }
 
     public void drawPackageIcon(Graphics g, Color color, int x, int y){
