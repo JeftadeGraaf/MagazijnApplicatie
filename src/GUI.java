@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class GUI extends JFrame implements ActionListener {
+public class GUI extends JFrame {
     private JButton orderInladen;
     private JButton orderAanmaken;
     private JButton orderAanpassen;
@@ -53,36 +53,39 @@ public class GUI extends JFrame implements ActionListener {
         add(robotLocatie);
         status.setBounds(500,525,200,25);
         status.setFont(new Font("Calibri", Font.BOLD, 20));
-        orderInladen.addActionListener(this);
-        orderAanpassen.addActionListener(this);
+        orderInladen.addActionListener(this::clickedOrderLoad);
+        orderAanpassen.addActionListener(this::clickedOrderChange);
+        orderAanmaken.addActionListener(this::clickedOrderAdded);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource().equals(orderInladen)){
-            OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
-            loadedOrderID = order.getOrderID();
-            if(loadedOrderID != -1){
-                orderVerwerken.setEnabled(true);
-                orderAanpassen.setEnabled(true);
-            }
+
+    public void clickedOrderLoad(ActionEvent e){
+        OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
+        loadedOrderID = order.getOrderID();
+        if(loadedOrderID != -1){
+            orderVerwerken.setEnabled(true);
+            orderAanpassen.setEnabled(true);
+        }
+        orderLines = databaseManager.getOrderLines(loadedOrderID);
+        if (orderLines.isEmpty()) {
+            OrderLine or = new OrderLine();
+            or.setOrderID(-1);
+            orderLines.clear();
+            orderLines.add(or);
+        }
+    }
+
+    public void clickedOrderChange(ActionEvent e){
+        if(loadedOrderID != 0){
+            new updateOrderDialog(this, true, loadedOrderID, orderLines, databaseManager);
             orderLines = databaseManager.getOrderLines(loadedOrderID);
-            if (orderLines.isEmpty()) {
-                OrderLine or = new OrderLine();
-                or.setOrderID(-1);
-                orderLines.clear();
-                orderLines.add(or);
-            }
         }
-        if(e.getSource().equals(orderAanpassen)){
-            if(loadedOrderID != 0){
-                new updateOrderDialog(this, true, loadedOrderID, orderLines, databaseManager);
-                orderLines = databaseManager.getOrderLines(loadedOrderID);
-            }
-        }
-        orderBijhouder.repaint();
+    }
+
+    public void clickedOrderAdded(ActionEvent e){
+        OrderAddDialog addDialog = new OrderAddDialog(this, true);
     }
 
     public ArrayList<OrderLine> getOrderLines() {
