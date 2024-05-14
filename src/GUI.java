@@ -32,13 +32,13 @@ public class GUI extends JFrame {
         orderInladen= new JButton("Order inladen");
         orderVerwerken = new JButton("Order verwerken");
         status = new JLabel("STATUS: Handmatig");
-        orderBijhouder = new OrderBijhouderPanel(this);
+        orderBijhouder = new OrderBijhouderPanel(this, databaseManager);
         orderInladen.setBounds(500,25,225,25);
         orderBijhouder.setBounds(500,60,475,400);
         orderAanmaken.setBounds(750,25,225,25);
         orderAanpassen.setBounds(500,470,225,25);
         orderVerwerken.setBounds(750,470,225,25);
-        robotLocatie = new RobotLocatieGUI();
+        robotLocatie = new RobotLocatieGUI(this);
         robotLocatie.setBounds(25,25,450,550);
         add(orderInladen);
         add(orderAanmaken);
@@ -62,10 +62,6 @@ public class GUI extends JFrame {
     public void clickedOrderLoad(ActionEvent e){
         OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
         loadedOrderID = order.getOrderID();
-        if(loadedOrderID != -1){
-            orderVerwerken.setEnabled(true);
-            orderAanpassen.setEnabled(true);
-        }
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         if (orderLines.isEmpty()) {
             OrderLine or = new OrderLine();
@@ -74,6 +70,9 @@ public class GUI extends JFrame {
             orderLines.add(or);
             orderAanpassen.setEnabled(false);
             orderVerwerken.setEnabled(false);
+        } else {
+            orderVerwerken.setEnabled(true);
+            orderAanpassen.setEnabled(true);
         }
         robotLocatie.repaint();
         orderBijhouder.repaint();
@@ -81,15 +80,15 @@ public class GUI extends JFrame {
 
     public void clickedOrderChange(ActionEvent e){
         if(loadedOrderID != 0){
-            new updateOrderDialog(this, true, loadedOrderID, orderLines, databaseManager);
             orderLines = databaseManager.getOrderLines(loadedOrderID);
+            new updateOrderDialog(this, true, loadedOrderID, orderLines, databaseManager);
         }
         robotLocatie.repaint();
         orderBijhouder.repaint();
     }
 
     public void clickedOrderAdded(ActionEvent e){
-        OrderAddDialog addDialog = new OrderAddDialog(this, true);
+        OrderAddDialog addDialog = new OrderAddDialog(this, true, databaseManager);
         robotLocatie.repaint();
         orderBijhouder.repaint();
     }

@@ -1,5 +1,8 @@
+import entity.OrderLine;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class RobotLocatieGUI extends JPanel{
 
@@ -7,7 +10,10 @@ public class RobotLocatieGUI extends JPanel{
     private JLabel fetchedLabel;
     private JLabel robotLabel;
 
-    public RobotLocatieGUI(){
+    private GUI gui;
+
+    public RobotLocatieGUI(GUI gui){
+        this.gui = gui;
         setLayout(null);
         setBorder(BorderFactory.createLineBorder(Color.black));
         fetchedLabel = new JLabel("Opgehaald product");
@@ -31,9 +37,26 @@ public class RobotLocatieGUI extends JPanel{
         g.fillRect(0,400,450,150);
         g.setColor(Color.lightGray);
         g.fillRect(2,402,446,146);
-        drawPackageIconLarge(g, Color.red, 40, 440);
-        drawPackageIconLarge(g, Color.green, 40, 500);
+        drawPackageIconLarge(g, Color.green, 40, 440);
+        drawPackageIconLarge(g, Color.red, 40, 500);
         drawRackGrid(g);
+        ArrayList<OrderLine> orderLines = gui.getOrderLines();
+        if(orderLines.size() > 0 && orderLines.get(0).getOrderID() != -1){
+            for (int i = 0; i < orderLines.size(); i++) {
+                int x = orderLines.get(i).getStockItem().getX();
+                int y = orderLines.get(i).getStockItem().getY();
+                if(x > 0 && y > 0){
+                    int xIcon = 340 - ((x-1) * 65);
+                    int yIcon = 295 - ((y-1) * 65);
+                    int xLabel = 295 - ((x-1) * 65);
+                    int yLabel = 305 - ((y-1) * 65);
+                    drawPackageIcon(g, Color.red, xIcon, yIcon);
+                    g.setColor(Color.black);
+                    g.setFont(new Font("Calibri", Font.PLAIN, 20));
+                    g.drawString(String.valueOf(orderLines.get(i).getStockItem().getStockItemID()), xLabel,yLabel);
+                }
+            }
+        }
     }
 
     public void drawRackGrid(Graphics g){
