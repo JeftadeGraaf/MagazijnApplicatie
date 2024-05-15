@@ -14,6 +14,8 @@ public class GUI extends JFrame {
     private JLabel status;
 
     private int loadedOrderID = 0;
+    private int robotXCoordinate = 0;
+    private int robotYCoordinate = 0;
 
     OrderBijhouderPanel orderBijhouder;
     RobotLocatieGUI robotLocatie;
@@ -91,6 +93,18 @@ public class GUI extends JFrame {
         OrderAddDialog addDialog = new OrderAddDialog(this, true, databaseManager);
         robotLocatie.repaint();
         orderBijhouder.repaint();
+    }
+
+    public void changeStatusText(String newStatus){
+        status.setText("Status: " + newStatus);
+    }
+
+    public void setRobotXCoordinate(int xCoordinate){
+
+    }
+
+    public void setRobotYCoordinate(int yCoordinate){
+
     }
 
     public ArrayList<OrderLine> getOrderLines() {

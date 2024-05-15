@@ -9,9 +9,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class SerialManager implements SerialPortDataListener {
     private final SerialPort comPort;
     private final StringBuilder messageBuffer = new StringBuilder();
+    private GUI gui;
 
-    public SerialManager(SerialPort comPort) {
+    public SerialManager(SerialPort comPort, GUI gui) {
         this.comPort = comPort;
+        this.gui = gui;
     }
 
     @Override
@@ -41,11 +43,31 @@ public class SerialManager implements SerialPortDataListener {
                     System.out.println(message);
                     char testChar = messages[i].charAt(0);
                     switch (testChar) {
-                        case 'n':
-                            sendMessage("bn");
-                            break;
                         case 's':
                             sendMessage("bs");
+                            switch (messages[i].charAt(1)){
+                                case 'g':
+                                    gui.changeStatusText("automatisch");
+                                    break;
+                                case 'r':
+                                    gui.changeStatusText("noodstop");
+                                    break;
+                                case 'o':
+                                    gui.changeStatusText("handmatig");
+                                    break;
+                                case 'b':
+                                    gui.changeStatusText("calibratie");
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
+                        case 'l':
+                            message = message.substring(1, message.length());
+                            String[] location = message.split(",");
+                            gui.setRobotXCoordinate(Integer.parseInt(location[0]));
+                            gui.setRobotYCoordinate(Integer.parseInt(location[1]));
+                        default:
                             break;
                     }
                 }
