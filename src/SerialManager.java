@@ -2,7 +2,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
-import java.io.UnsupportedEncodingException;
+import java.awt.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -14,6 +14,11 @@ public class SerialManager implements SerialPortDataListener {
     public SerialManager(SerialPort comPort, GUI gui) {
         this.comPort = comPort;
         this.gui = gui;
+    }
+
+    public SerialManager(GUI gui){
+        this.gui = gui;
+        this.comPort = SerialPort.getCommPorts()[0];
     }
 
     @Override
@@ -41,29 +46,30 @@ public class SerialManager implements SerialPortDataListener {
                 for (int i = 0; i < messages.length - 1; i++) {
                     String message = messages[i];
                     System.out.println(message);
+                    System.out.println(message);
                     char testChar = messages[i].charAt(0);
                     switch (testChar) {
                         case 's':
                             sendMessage("bs");
                             switch (messages[i].charAt(1)){
                                 case 'g':
-                                    gui.changeStatusText("automatisch");
+                                    gui.changeStatus("automatisch", Color.green);
                                     break;
                                 case 'r':
-                                    gui.changeStatusText("noodstop");
+                                    gui.changeStatus("noodstop", Color.red);
                                     break;
                                 case 'o':
-                                    gui.changeStatusText("handmatig");
+                                    gui.changeStatus("handmatig", Color.orange);
                                     break;
                                 case 'b':
-                                    gui.changeStatusText("calibratie");
+                                    gui.changeStatus("calibratie", Color.blue);
                                     break;
                                 default:
                                     break;
                             }
                             break;
                         case 'l':
-                            message = message.substring(1, message.length());
+                            message = message.substring(1);
                             String[] location = message.split(",");
                             gui.setRobotXCoordinate(Integer.parseInt(location[0]));
                             gui.setRobotYCoordinate(Integer.parseInt(location[1]));
@@ -76,13 +82,6 @@ public class SerialManager implements SerialPortDataListener {
                 messageBuffer.append(messages[messages.length - 1]);
             }
         }
-
-        String[] messages = messageBuffer.toString().split("\n");
-        if (messages.length > 1) {
-
-        }
-
-
     }
 
     public void sendMessage(String message) {

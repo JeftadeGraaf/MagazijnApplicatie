@@ -16,14 +16,17 @@ public class GUI extends JFrame {
     private int loadedOrderID = 0;
     private int robotXCoordinate = 0;
     private int robotYCoordinate = 0;
+    private Color statusColor = Color.red;
 
     OrderBijhouderPanel orderBijhouder;
     RobotLocatieGUI robotLocatie;
     private DatabaseManager databaseManager;
+    private SerialManager serialManager;
     private ArrayList<OrderLine> orderLines = new ArrayList<>();
 
     public GUI(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
+        serialManager = new SerialManager(this);
         setLayout(null);
         setSize(1000, 650);
         setTitle("HMI Applicatie");
@@ -95,16 +98,20 @@ public class GUI extends JFrame {
         orderBijhouder.repaint();
     }
 
-    public void changeStatusText(String newStatus){
+    public void changeStatus(String newStatus, Color color){
         status.setText("Status: " + newStatus);
+        statusColor = color;
+        orderBijhouder.repaint();
     }
 
     public void setRobotXCoordinate(int xCoordinate){
-
+        robotXCoordinate = xCoordinate;
+        robotLocatie.repaint();
     }
 
     public void setRobotYCoordinate(int yCoordinate){
-
+        robotYCoordinate = yCoordinate;
+        robotLocatie.repaint();
     }
 
     public ArrayList<OrderLine> getOrderLines() {
