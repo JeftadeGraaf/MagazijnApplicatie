@@ -9,30 +9,32 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
     private JButton okButton;
     private JButton annuleren;
     private JLabel LabelOrderID;
-    private JLabel placeholder2;
     private JTextField OrderIDTekstveld;
 
     private int orderID;
 
-    //private JTextField placeholder2a;
     public OrderIDInvullenDialog(JFrame frame, boolean modaal){
         super(frame,modaal);
-        setSize(300,200);
+        setSize(310,135);
+        setResizable(false);
         setTitle("Order");
-        setLayout(new FlowLayout(10,30,30));
-        OrderIDTekstveld = new JTextField();
+        setLayout(null);
+        OrderIDTekstveld = new JTextField("", 8);
         LabelOrderID = new JLabel("Vul in orderID:");
-        OrderIDTekstveld.setColumns(8);
         annuleren = new JButton("Annuleren");
         okButton = new JButton("OK");
         add(LabelOrderID);
         add(OrderIDTekstveld);
         add(annuleren);
         add(okButton);
+        LabelOrderID.setBounds(25, 20, 120, 25);
+        OrderIDTekstveld.setBounds(155, 20, 120, 25);
+        annuleren.setBounds(25, 60, 120, 25);
+        okButton.setBounds(155, 60, 120, 25);
         okButton.addActionListener(this);
         annuleren.addActionListener(this);
         setVisible(true);
-        setDefaultCloseOperation(HIDE_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
     @Override

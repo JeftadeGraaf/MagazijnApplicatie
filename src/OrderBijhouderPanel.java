@@ -1,3 +1,4 @@
+import database.DatabaseManager;
 import entity.OrderLine;
 
 import javax.swing.*;
@@ -9,8 +10,11 @@ public class OrderBijhouderPanel extends JPanel{
 
     private GUI gui;
 
-    public OrderBijhouderPanel(GUI gui){
+    private DatabaseManager databaseManager;
+
+    public OrderBijhouderPanel(GUI gui, DatabaseManager databaseManager){
         this.gui = gui;
+        this.databaseManager = databaseManager;
         setLayout(null);
         setBorder(BorderFactory.createLineBorder(Color.black));
         setVisible(true);
@@ -30,9 +34,17 @@ public class OrderBijhouderPanel extends JPanel{
             g.drawString("Ongeldige invoer", x, y);
             return;
         }
+        g.drawString("Order ID: " + orderLines.get(0).getOrderID(), x, y);
+        y += 20;
         for (OrderLine orderLine : orderLines) {
-            g.drawString("OrderID: " + orderLine.getOrderID() + "; ItemID: " + orderLine.getStockItem().getStockItemID(), x, y);
+            String itemName = databaseManager.getProductName(orderLine.getStockItem().getStockItemID());
+            if( orderLine.getStockItem().getX() == 0){
+                g.drawString(" ItemID: " + orderLine.getStockItem().getStockItemID() + " | " + itemName + " (NIET IN STELLING)", x, y);
+            } else {
+                g.drawString(" ItemID: " + orderLine.getStockItem().getStockItemID() + " | " + itemName, x, y);
+            }
             y += 20;
         }
+        g.drawString(TSPBruteForce.getRoute(orderLines), x, y);
     }
 }

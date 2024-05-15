@@ -1,5 +1,8 @@
+import database.DatabaseManager;
+
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -15,8 +18,11 @@ public class OrderAddDialog extends JDialog {
     JTextField customerIdText = new JTextField();
 
 
-    public OrderAddDialog(JFrame jframe, boolean modal){
+    private DatabaseManager databaseManager;
+
+    public OrderAddDialog(JFrame jframe, boolean modal, DatabaseManager databaseManager){
         super(jframe, modal);
+        this.databaseManager = databaseManager;
         jFrame = jframe;
         setSize(400, 200);
         setTitle("Order toevoegen");
@@ -56,7 +62,7 @@ public class OrderAddDialog extends JDialog {
         productsPanel.setBorder(blackLine);
         productsPanel.setLayout(new GridLayout(0, 1));
 
-        productsScrollPane.setBounds(148, 0, 240, 132);
+        productsScrollPane.setBounds(198, 0, 390, 132);
         add(productsScrollPane);
 
         JButton cancelButton = new JButton("Cancel");
@@ -105,11 +111,12 @@ public class OrderAddDialog extends JDialog {
 
 
             JPanel productPanel = new JPanel();
-            productPanel.setBounds(5, 60*size + 5, 228, 55);
+//            productPanel.setBounds(5, 60*size + 5, 228, 55);
             productPanel.setBorder(blackLine);
             productsPanel.add(productPanel);
 
-            JLabel productLabel = new JLabel(id + " :  help dit werkt eindelijk");
+            String itemName = databaseManager.getProductName(id);
+            JLabel productLabel = new JLabel(id + " :  " + itemName);
             productPanel.add(productLabel);
 
             JButton trashCanButton = new JButton("\uD83D\uDDD1");
