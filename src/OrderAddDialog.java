@@ -24,7 +24,6 @@ public class OrderAddDialog extends JDialog {
     public OrderAddDialog(JFrame jframe, boolean modal, DatabaseManager databaseManager){
         super(jframe, modal);
         this.databaseManager = databaseManager;
-        jFrame = jframe;
         setSize(620, 250);
 
         setTitle("Order toevoegen");
