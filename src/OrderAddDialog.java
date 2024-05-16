@@ -24,13 +24,13 @@ public class OrderAddDialog extends JDialog {
         super(jframe, modal);
         this.databaseManager = databaseManager;
         jFrame = jframe;
-        setSize(400, 200);
+        setSize(620, 250);
         setTitle("Order toevoegen");
         setLayout(null);
         setResizable(true);
 
         JPanel customerId = new JPanel(null);
-        customerId.setBounds(0, 0, 150, 50);
+        customerId.setBounds(20, 20, 150, 50);
         customerId.setBorder(blackLine);
         add(customerId);
 
@@ -42,7 +42,7 @@ public class OrderAddDialog extends JDialog {
         customerId.add(customerIdText);
 
         JPanel stockItemId = new JPanel();
-        stockItemId.setBounds(0, 50, 150, 80);
+        stockItemId.setBounds(20, 70, 150, 80);
         stockItemId.setBorder(blackLine);
         stockItemId.setLayout(null);
         add(stockItemId);
@@ -62,16 +62,16 @@ public class OrderAddDialog extends JDialog {
         productsPanel.setBorder(blackLine);
         productsPanel.setLayout(new GridLayout(0, 1));
 
-        productsScrollPane.setBounds(198, 0, 390, 132);
+        productsScrollPane.setBounds(198, 20, 390, 132);
         add(productsScrollPane);
 
         JButton cancelButton = new JButton("Cancel");
-        cancelButton.setBounds(170, 135, 90, 20);
+        cancelButton.setBounds(400, 165, 90, 20);
         cancelButton.addActionListener(this::cancelClicked);
         add(cancelButton);
 
         JButton okButton = new JButton("Ok");
-        okButton.setBounds(270, 135, 90, 20);
+        okButton.setBounds(500, 165, 90, 20);
         okButton.addActionListener(this::okClicked);
         add(okButton);
 
