@@ -1,4 +1,5 @@
 import database.DatabaseManager;
+import entity.OrderLine;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,14 +11,14 @@ import java.util.Objects;
 
 public class OrderAddDialog extends JDialog {
     private ArrayList<JButton> productButtons = new ArrayList<JButton>();
+    private ArrayList<Integer> productIds = new ArrayList<Integer>();
     private JTextField stockItemIdText = new JTextField();
     private Border blackLine = BorderFactory.createLineBorder(Color.black);
     private JPanel productsPanel = new JPanel();
     private JScrollPane productsScrollPane = new JScrollPane(productsPanel);
-    private JFrame jFrame;
-    JTextField customerIdText = new JTextField();
-
-
+    private JTextField customerIdText = new JTextField();
+    private Integer orderId = 0;
+    private JLabel errorText = new JLabel("");
     private DatabaseManager databaseManager;
 
     public OrderAddDialog(JFrame jframe, boolean modal, DatabaseManager databaseManager){
@@ -25,6 +26,7 @@ public class OrderAddDialog extends JDialog {
         this.databaseManager = databaseManager;
         jFrame = jframe;
         setSize(620, 250);
+
         setTitle("Order toevoegen");
         setLayout(null);
         setResizable(true);
@@ -75,7 +77,9 @@ public class OrderAddDialog extends JDialog {
         okButton.addActionListener(this::okClicked);
         add(okButton);
 
+        errorText.setBounds(100, 150, 125, 25);
 
+        add(errorText);
 
 
         setVisible(true);
@@ -90,6 +94,16 @@ public class OrderAddDialog extends JDialog {
         if(Objects.equals(customerIdText.getText(), "") || productButtons.isEmpty()){
             dispose();
         } else {
+            try {
+                int customerId = Integer.parseInt(stockItemIdText.getText());
+                orderId = databaseManager.addNewOrder(customerId);
+                for (int i = 0; i < productIds.size(); i++) {
+                    databaseManager.addProductToOrder(orderId, productIds.get(i));
+                }
+                hide();
+            } catch (NumberFormatException ex) {
+                errorText.setText("alleen nummers toegestaan");
+            }
 
         }
     }
@@ -98,6 +112,7 @@ public class OrderAddDialog extends JDialog {
         for (int i = 0; i < productButtons.size(); i++) {
             productsPanel.remove(productButtons.get(i).getParent());
             productButtons.remove(i);
+            productIds.remove(i);
             productsPanel.revalidate();
             productsPanel.repaint();
             break;
@@ -125,13 +140,18 @@ public class OrderAddDialog extends JDialog {
             trashCanButton.addActionListener(this::trashCanClicked);
             productPanel.add(trashCanButton);
             productButtons.add(trashCanButton);
+            productIds.add(id);
 
 
             productsPanel.repaint();
             productsPanel.revalidate();
         }
         catch (NumberFormatException n){
-            stockItemIdText.setText("alleen nummers toegestaan");
+            errorText.setText("alleen nummers toegestaan");
         }
+    }
+
+    public int getOrderId(){
+        return orderId;
     }
 }
