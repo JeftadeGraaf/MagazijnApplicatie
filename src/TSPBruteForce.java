@@ -80,11 +80,8 @@ public class TSPBruteForce {
         baseItem.setY(0);
         OrderLine baseLine = new OrderLine();
         baseLine.setStockItem(baseItem);
-//        orderLines.add(baseLine);
         orderLines.addFirst(baseLine);
         Pair<Double, ArrayList<Integer>> result = tspBruteForce(orderLines);
-        System.out.println("Shortest Distance: " + String.valueOf(result.getFirst()));
-        System.out.print("Best Path: ");
         Iterator var3 = ((ArrayList)result.getSecond()).iterator();
 
         String route = "o";

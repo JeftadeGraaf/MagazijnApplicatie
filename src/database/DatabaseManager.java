@@ -1,5 +1,6 @@
 package database;
 
+import com.mysql.cj.protocol.Resultset;
 import entity.OrderLine;
 import entity.StockItem;
 
@@ -50,7 +51,6 @@ public class DatabaseManager {
             statement.setInt(1, orderId);
             statement.setInt(2, orderLineID);
             statement.executeUpdate();
-            System.out.println("Removed " + orderId + orderLineID);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -86,20 +86,43 @@ public class DatabaseManager {
         return new int[]{x, y};
     }
 
-    private static int getRandomNumberInRange(int min, int max) {
-
-        if (min >= max) {
-            throw new IllegalArgumentException("max must be greater than min");
+    public String getProductName(int productID){
+        try{
+            PreparedStatement statement = connection.prepareStatement("SELECT StockItemName FROM stockitems WHERE StockItemID = ?;");
+            statement.setInt(1, productID);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                return rs.getString("StockItemName");
+            } else {
+                return "Error: geen productnaam gevonden";
+            }
+        } catch(SQLException e){
+            throw new RuntimeException(e);
         }
 
-        Random r = new Random();
-        return r.nextInt((max - min) + 1) + min;
     }
-
 
 
     public void closeConnection() throws SQLException {
         connection.close();
+    }
+
+    public int addNewOrder(int CustomerID){
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO orders (CustomerID, SalespersonPersonID, PickedByPersonID, ContactPersonID, BackorderOrderID, OrderDate, ExpectedDeliveryDate, CustomerPurchaseOrderNumber, IsUndersupplyBackordered, PickingCompletedWhen, LastEditedBy, LastEditedWhen) VALUES(?, 2, 3, 3032, 45, now(), now(), 12126, 1, now(), 7, now())", PreparedStatement.RETURN_GENERATED_KEYS);
+            statement.setInt(1, CustomerID);
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0){
+                ResultSet generatedKeys = statement.getGeneratedKeys();
+                if(generatedKeys.next()){
+                    return generatedKeys.getInt(1);
+                }
+            }
+            return 0;
+
+        } catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -2,8 +2,8 @@ import database.DatabaseManager;
 import entity.OrderLine;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class GUI extends JFrame {
@@ -14,33 +14,37 @@ public class GUI extends JFrame {
     private JLabel status;
 
     private int loadedOrderID = 0;
+    private int robotXCoordinate = 0;
+    private int robotYCoordinate = 0;
+    private Color statusColor = Color.red;
 
-    JLabel testerVoorStatusVerwijderLater;
     OrderBijhouderPanel orderBijhouder;
     RobotLocatieGUI robotLocatie;
     private DatabaseManager databaseManager;
+    private SerialManager serialManager;
     private ArrayList<OrderLine> orderLines = new ArrayList<>();
 
     public GUI(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
+        //serialManager = new SerialManager(this);
         setLayout(null);
-        setSize(854, 580);
+        setSize(1000, 650);
         setTitle("HMI Applicatie");
+        setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         orderAanpassen = new JButton("Order aanpassen");
-        orderAanmaken = new JButton("Order aannmaken");
+        orderAanmaken = new JButton("Order aanmaken");
         orderInladen= new JButton("Order inladen");
         orderVerwerken = new JButton("Order verwerken");
-        testerVoorStatusVerwijderLater = new JLabel("handmatig");
-        status = new JLabel("Status:");
-        orderBijhouder = new OrderBijhouderPanel(this);
-        robotLocatie = new RobotLocatieGUI();
-        orderInladen.setBounds(400,25,135,25);
-        orderBijhouder.setBounds(400,60,400,300);
-        orderAanmaken.setBounds(550,25,135,25);
-        orderAanpassen.setBounds(400,370,135,25);
-        orderVerwerken.setBounds(550,370,135,25);
-        robotLocatie.setBounds(10,20,380,450);
+        status = new JLabel("STATUS: Handmatig");
+        orderBijhouder = new OrderBijhouderPanel(this, databaseManager);
+        orderInladen.setBounds(500,25,225,25);
+        orderBijhouder.setBounds(500,60,475,400);
+        orderAanmaken.setBounds(750,25,225,25);
+        orderAanpassen.setBounds(500,470,225,25);
+        orderVerwerken.setBounds(750,470,225,25);
+        robotLocatie = new RobotLocatieGUI(this);
+        robotLocatie.setBounds(25,25,450,550);
         add(orderInladen);
         add(orderAanmaken);
         add(status);
@@ -49,10 +53,9 @@ public class GUI extends JFrame {
         orderAanpassen.setEnabled(false);
         add(orderVerwerken);
         orderVerwerken.setEnabled(false);
-        add(testerVoorStatusVerwijderLater);
         add(robotLocatie);
-        status.setBounds(700,-13,100,100);
-        testerVoorStatusVerwijderLater.setBounds(742,-13,100,100);
+        status.setBounds(500,525,200,25);
+        status.setFont(new Font("Calibri", Font.BOLD, 20));
         orderInladen.addActionListener(this::clickedOrderLoad);
         orderAanpassen.addActionListener(this::clickedOrderChange);
         orderAanmaken.addActionListener(this::clickedOrderAdded);
@@ -64,28 +67,53 @@ public class GUI extends JFrame {
     public void clickedOrderLoad(ActionEvent e){
         OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
         loadedOrderID = order.getOrderID();
-        if(loadedOrderID != -1){
-            orderVerwerken.setEnabled(true);
-            orderAanpassen.setEnabled(true);
-        }
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         if (orderLines.isEmpty()) {
             OrderLine or = new OrderLine();
             or.setOrderID(-1);
             orderLines.clear();
             orderLines.add(or);
+            orderAanpassen.setEnabled(false);
+            orderVerwerken.setEnabled(false);
+        } else {
+            orderVerwerken.setEnabled(true);
+            orderAanpassen.setEnabled(true);
         }
+        robotLocatie.repaint();
+        orderBijhouder.repaint();
     }
 
     public void clickedOrderChange(ActionEvent e){
         if(loadedOrderID != 0){
-            new updateOrderDialog(this, true, loadedOrderID, orderLines, databaseManager);
             orderLines = databaseManager.getOrderLines(loadedOrderID);
+            new updateOrderDialog(this, true, loadedOrderID, orderLines, databaseManager);
         }
+        robotLocatie.repaint();
+        orderBijhouder.repaint();
     }
 
     public void clickedOrderAdded(ActionEvent e){
-        OrderAddDialog addDialog = new OrderAddDialog(this, true);
+        OrderAddDialog addDialog = new OrderAddDialog(this, true, databaseManager);
+        loadedOrderID = addDialog.getOrderId();
+        orderLines = databaseManager.getOrderLines(loadedOrderID);
+        robotLocatie.repaint();
+        orderBijhouder.repaint();
+    }
+
+    public void changeStatus(String newStatus, Color color){
+        status.setText("Status: " + newStatus);
+        statusColor = color;
+        orderBijhouder.repaint();
+    }
+
+    public void setRobotXCoordinate(int xCoordinate){
+        robotXCoordinate = xCoordinate;
+        robotLocatie.repaint();
+    }
+
+    public void setRobotYCoordinate(int yCoordinate){
+        robotYCoordinate = yCoordinate;
+        robotLocatie.repaint();
     }
 
     public ArrayList<OrderLine> getOrderLines() {

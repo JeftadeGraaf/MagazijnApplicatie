@@ -25,7 +25,7 @@ public class updateOrderDialog extends JDialog implements ActionListener {
     private JPanel scrollFrame = new JPanel();
     private JScrollPane scrollPane;
 
-    private JButton cancelButton = new JButton("Annuleren");
+    private JButton cancelButton = new JButton("Ok");
 
     public updateOrderDialog(JFrame frame, boolean modal, int orderID, ArrayList<OrderLine> orderLines, DatabaseManager databaseManager){
         super(frame, modal);
@@ -44,6 +44,7 @@ public class updateOrderDialog extends JDialog implements ActionListener {
         scrollFrame.setLayout(new GridLayout(0, 2));
 
         for(OrderLine orderLine : orderLines){
+            String itemName = databaseManager.getProductName(orderLine.getStockItem().getStockItemID());
             scrollFrame.add(new JLabel("Product " + orderLine.getStockItem().getStockItemID()));
             JButton button = new JButton("Verwijder");
             buttonArray.add(button);
