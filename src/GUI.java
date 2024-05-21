@@ -108,6 +108,9 @@ public class GUI extends JFrame {
 
     public void clickedManageStock(ActionEvent e){
         StockUpdateDialog stockUpdateDialog = new StockUpdateDialog(this, true, databaseManager);
+        orderLines = databaseManager.getOrderLines(loadedOrderID);
+        robotLocatie.repaint();
+        orderBijhouder.repaint();
     }
 
     public void changeStatus(String newStatus, Color color){
