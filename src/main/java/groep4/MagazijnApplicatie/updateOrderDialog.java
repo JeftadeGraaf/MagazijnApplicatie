@@ -1,7 +1,8 @@
-import com.mysql.cj.x.protobuf.MysqlxCrud;
-import database.DatabaseManager;
-import entity.OrderLine;
-import entity.StockItem;
+package groep4.MagazijnApplicatie;
+
+import groep4.MagazijnApplicatie.database.DatabaseManager;
+import groep4.MagazijnApplicatie.entity.OrderLine;
+import groep4.MagazijnApplicatie.entity.StockItem;
 
 import javax.swing.*;
 import java.awt.*;

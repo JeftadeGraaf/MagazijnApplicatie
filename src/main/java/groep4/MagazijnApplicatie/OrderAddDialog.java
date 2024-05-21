@@ -1,9 +1,9 @@
-import database.DatabaseManager;
-import entity.OrderLine;
+package groep4.MagazijnApplicatie;
+
+import groep4.MagazijnApplicatie.database.DatabaseManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

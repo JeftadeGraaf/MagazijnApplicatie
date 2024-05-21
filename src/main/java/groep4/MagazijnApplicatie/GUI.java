@@ -1,5 +1,7 @@
-import database.DatabaseManager;
-import entity.OrderLine;
+package groep4.MagazijnApplicatie;
+
+import groep4.MagazijnApplicatie.database.DatabaseManager;
+import groep4.MagazijnApplicatie.entity.OrderLine;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +28,7 @@ public class GUI extends JFrame {
 
     public GUI(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
-        //serialManager = new SerialManager(this);
+        //serialManager = new groep4.MagazijnApplicatie.SerialManager(this);
         setLayout(null);
         setSize(1000, 650);
         setTitle("HMI Applicatie");

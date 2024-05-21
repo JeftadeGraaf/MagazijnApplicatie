@@ -1,4 +1,6 @@
-import entity.OrderLine;
+package groep4.MagazijnApplicatie;
+
+import groep4.MagazijnApplicatie.entity.OrderLine;
 
 import javax.swing.*;
 import java.awt.*;
