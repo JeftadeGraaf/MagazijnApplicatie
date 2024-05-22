@@ -15,10 +15,12 @@ public class GUI extends JFrame {
     private JButton voorraadBeheer;
     private JLabel status;
 
+
     private int loadedOrderID = 0;
     private int robotXCoordinate = 0;
     private int robotYCoordinate = 0;
     private Color statusColor = Color.red;
+
 
     OrderBijhouderPanel orderBijhouder;
     RobotLocatieGUI robotLocatie;
@@ -41,6 +43,7 @@ public class GUI extends JFrame {
         voorraadBeheer = new JButton("Voorraadbeheer");
         status = new JLabel("STATUS: Handmatig");
         orderBijhouder = new OrderBijhouderPanel(this, databaseManager);
+
         orderInladen.setBounds(500,25,225,25);
         orderBijhouder.setBounds(500,60,475,400);
         orderAanmaken.setBounds(750,25,225,25);
