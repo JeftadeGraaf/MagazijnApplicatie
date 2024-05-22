@@ -82,7 +82,8 @@ public class updateOrderDialog extends JDialog implements ActionListener {
                 OrderLine orderLine = new OrderLine();
                 orderLine.setOrderID(orderID);
                 int[] itemCoordinates = databaseManager.getItemRackLocation(itemID);
-                orderLine.setStockItem(new StockItem(Integer.parseInt(addText.getText()), itemCoordinates[0], itemCoordinates[1]));
+                int newItemID = Integer.parseInt(addText.getText());
+                orderLine.setStockItem(new StockItem(newItemID, itemCoordinates[0], itemCoordinates[1], databaseManager.getItemWeight(newItemID)));
                 orderLines.add(orderLine);
                 scrollFrame.add(new JLabel("Product " + itemID));
                 scrollFrame.add(new JButton("Verwijder"));
