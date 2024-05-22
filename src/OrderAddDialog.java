@@ -150,10 +150,6 @@ public class OrderAddDialog extends JDialog implements ActionListener {
         }
     }
 
-    public int getOrderId(){
-        return orderId;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         for (int i = 0; i < productButtons.size(); i++) {
@@ -164,5 +160,9 @@ public class OrderAddDialog extends JDialog implements ActionListener {
                 productsPanel.repaint();
             }
         }
+    }
+
+    public int getOrderId(){
+        return orderId;
     }
 }
