@@ -74,6 +74,14 @@ public class RobotLocatieGUI extends JPanel{
             x += cellSize;
             y = 25;
         }
+
+        g.setFont(new Font("Calibri", Font.BOLD, 14));
+        for (int i = 0; i < 5; i++) {
+            g.drawString(String.valueOf(i+1), 10, (320-(i*cellSize)));
+        }
+        for (int i = 0; i < 5; i++) {
+            g.drawString(String.valueOf(i+1), (320 - (i*cellSize)), 370);
+        }
         g.drawRect(355, 285, cellSize, cellSize);
     }
 
