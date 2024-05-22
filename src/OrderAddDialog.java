@@ -6,12 +6,14 @@ import javax.swing.border.Border;
 import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class OrderAddDialog extends JDialog {
-    private ArrayList<JButton> productButtons = new ArrayList<JButton>();
-    private ArrayList<Integer> productIds = new ArrayList<Integer>();
+public class OrderAddDialog extends JDialog implements ActionListener {
+    private ArrayList<JPanel> productPanels = new ArrayList<>();
+    private ArrayList<JButton> productButtons = new ArrayList<>();
+    private ArrayList<Integer> productIds = new ArrayList<>();
     private JTextField stockItemIdText = new JTextField();
     private Border blackLine = BorderFactory.createLineBorder(Color.black);
     private JPanel productsPanel = new JPanel();
@@ -122,10 +124,8 @@ public class OrderAddDialog extends JDialog {
         try{
             Integer id = Integer.valueOf(stockItemIdText.getText());
             int size = productButtons.size();
-
-
             JPanel productPanel = new JPanel();
-//            productPanel.setBounds(5, 60*size + 5, 228, 55);
+            productPanels.add(productPanel);
             productPanel.setBorder(blackLine);
             productsPanel.add(productPanel);
 
@@ -136,7 +136,7 @@ public class OrderAddDialog extends JDialog {
             JButton trashCanButton = new JButton("\uD83D\uDDD1");
             trashCanButton.setBounds(200, 0, 30, 30);
             trashCanButton.setFont(new Font("monospace", Font.PLAIN, 25));
-            trashCanButton.addActionListener(this::trashCanClicked);
+            trashCanButton.addActionListener(this);
             productPanel.add(trashCanButton);
             productButtons.add(trashCanButton);
             productIds.add(id);
@@ -147,6 +147,18 @@ public class OrderAddDialog extends JDialog {
         }
         catch (NumberFormatException n){
             errorText.setText("alleen nummers toegestaan");
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        for (int i = 0; i < productButtons.size(); i++) {
+            if(e.getSource().equals(productButtons.get(i))){
+                System.out.println(i);
+                productsPanel.remove(productPanels.get(i));
+                productsPanel.revalidate();
+                productsPanel.repaint();
+            }
         }
     }
 
