@@ -31,7 +31,7 @@ public class DatabaseManager {
             for (int i = 0; rs.next(); i++) {
                 int itemID = rs.getInt("StockItemID");
                 int[] itemCoordinates = getItemRackLocation(itemID);
-                StockItem stockItem = new StockItem(rs.getInt("StockItemID"), itemCoordinates[0], itemCoordinates[1]);
+                StockItem stockItem = new StockItem(rs.getInt("StockItemID"), itemCoordinates[0], itemCoordinates[1], getItemWeight(itemID));
                 OrderLine orderLine = new OrderLine();
                 orderLine.setStockItem(stockItem);
                 orderLine.setOrderID(rs.getInt("OrderID"));
@@ -41,6 +41,21 @@ public class DatabaseManager {
             return orderlines;
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public int getItemWeight(int itemID){
+        try{
+            PreparedStatement statement = connection.prepareStatement("SELECT `itemWeight` FROM stockitems WHERE StockItemID = ?");
+            statement.setInt(1, itemID);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                return rs.getInt("itemWeight");
+            } else {
+                return -1;
+            }
+        } catch(SQLException e){
+            throw  new RuntimeException(e);
         }
     }
 

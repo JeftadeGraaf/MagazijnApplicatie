@@ -1,8 +1,11 @@
 import database.DatabaseManager;
+import entity.Box;
 import entity.OrderLine;
+import entity.StockItem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class OrderBijhouderPanel extends JPanel{
@@ -36,18 +39,39 @@ public class OrderBijhouderPanel extends JPanel{
         }
         g.drawString("Order ID: " + orderLines.get(0).getOrderID(), x, y);
         y += 20;
-        for (OrderLine orderLine : orderLines) {
-            String itemName = databaseManager.getProductName(orderLine.getStockItem().getStockItemID());
-            if( orderLine.getStockItem().getX() == 0){
-                g.setColor(Color.red);
-                g.drawString(" ID " + orderLine.getStockItem().getStockItemID() + " | " + itemName + " (NIET IN STELLING)", x, y);
-            } else {
-                g.setColor(Color.black);
-                g.drawString("Vak (" + orderLine.getStockItem().getX() + "," +  orderLine.getStockItem().getY() + ") ID " + orderLine.getStockItem().getStockItemID() + " | " + itemName, x, y);
-            }
-            y += 20;
+
+        ArrayList<StockItem> itemsInOrder = new ArrayList<>();
+
+        for (OrderLine orderLine :orderLines){
+            itemsInOrder.add(orderLine.getStockItem());
         }
-        g.setColor(Color.black);
+
+        ArrayList<Box> boxList = BestFitDecreasing.calculateBPP(itemsInOrder, 6);
+
+        for (int i = 0; i < boxList.size(); i++) {
+            g.drawString("Doos " + (i+1), x, y);
+            y+= 20;
+            ArrayList<StockItem> itemsInBox = boxList.get(i).getProductlist();
+            for (int j = 0; j < itemsInBox.size(); j++) {
+                String itemName = databaseManager.getProductName(itemsInBox.get(j).getStockItemID());
+                if(itemsInBox.get(j).getX() == 0){
+                    g.drawString(" ItemID: " + itemsInBox.get(j).getStockItemID() + " | " + itemName + " (NIET IN STELLING)", x, y);
+                } else {
+                    g.drawString(" ItemID: " + itemsInBox.get(j).getStockItemID() + " | " + itemName, x, y);
+                }
+                y += 20;
+            }
+        }
+
+//        for (OrderLine orderLine : orderLines) {
+//            String itemName = databaseManager.getProductName(orderLine.getStockItem().getStockItemID());
+//            if( orderLine.getStockItem().getX() == 0){
+//                g.drawString(" ItemID: " + orderLine.getStockItem().getStockItemID() + " | " + itemName + " (NIET IN STELLING)", x, y);
+//            } else {
+//                g.drawString(" ItemID: " + orderLine.getStockItem().getStockItemID() + " | " + itemName, x, y);
+//            }
+//            y += 20;
+//        }
         g.drawString(TSPBruteForce.getRoute(orderLines), x, y);
     }
 }

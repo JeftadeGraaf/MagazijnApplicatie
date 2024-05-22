@@ -75,7 +75,7 @@ public class TSPBruteForce {
     }
 
     public static String getRoute(ArrayList<OrderLine> orderLines) {
-        StockItem baseItem = new StockItem(1, 0, 0);
+        StockItem baseItem = new StockItem(1, 0, 0, -1);
         baseItem.setX(0);
         baseItem.setY(0);
         OrderLine baseLine = new OrderLine();
