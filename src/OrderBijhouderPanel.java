@@ -39,12 +39,15 @@ public class OrderBijhouderPanel extends JPanel{
         for (OrderLine orderLine : orderLines) {
             String itemName = databaseManager.getProductName(orderLine.getStockItem().getStockItemID());
             if( orderLine.getStockItem().getX() == 0){
-                g.drawString(" ItemID: " + orderLine.getStockItem().getStockItemID() + " | " + itemName + " (NIET IN STELLING)", x, y);
+                g.setColor(Color.red);
+                g.drawString(" ID " + orderLine.getStockItem().getStockItemID() + " | " + itemName + " (NIET IN STELLING)", x, y);
             } else {
-                g.drawString(" ItemID: " + orderLine.getStockItem().getStockItemID() + " | " + itemName, x, y);
+                g.setColor(Color.black);
+                g.drawString("Vak (" + orderLine.getStockItem().getX() + "," +  orderLine.getStockItem().getY() + ") ID " + orderLine.getStockItem().getStockItemID() + " | " + itemName, x, y);
             }
             y += 20;
         }
+        g.setColor(Color.black);
         g.drawString(TSPBruteForce.getRoute(orderLines), x, y);
     }
 }
