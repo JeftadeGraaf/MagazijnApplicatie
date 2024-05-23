@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class OrderIDInvullenDialog extends JDialog implements ActionListener {
     private JButton okButton;
@@ -11,13 +13,13 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
     private JLabel LabelOrderID;
     private JTextField OrderIDTekstveld;
 
-    private int orderID = -1; // Initialize to a default invalid value
+    private int orderID;
     private GUI gui;
 
     public OrderIDInvullenDialog(JFrame frame, boolean modaal, GUI gui){
-        super(frame, modaal);
+        super(frame,modaal);
         this.gui = gui;
-        setSize(310, 135);
+        setSize(310,135);
         setResizable(false);
         setTitle("Order");
         setLayout(null);
@@ -62,4 +64,6 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
     public int getOrderID() {
         return orderID;
     }
+
+
 }
