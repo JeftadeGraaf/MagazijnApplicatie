@@ -1,12 +1,11 @@
-import com.itextpdf.text.DocumentException;
 import database.DatabaseManager;
 import java.io.IOException;
 import java.sql.SQLException;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException, IOException, DocumentException {
+    public static void main(String[] args) throws SQLException, IOException {
         DatabaseManager databaseManager = new DatabaseManager();
-        new GUI(databaseManager);
+        GUI gui = new GUI(databaseManager);
     }
 }
