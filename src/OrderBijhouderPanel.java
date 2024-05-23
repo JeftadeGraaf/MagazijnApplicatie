@@ -40,7 +40,6 @@ public class OrderBijhouderPanel extends JPanel {
         }
         g.setFont(boldFont);
         int orderID = gui.getLoadedOrderID();
-        System.out.println(orderID);
         g.drawString("Order-ID: " + orderID, x, y);
         y += 20;
 
