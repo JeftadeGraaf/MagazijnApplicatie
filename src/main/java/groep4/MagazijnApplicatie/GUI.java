@@ -1,11 +1,15 @@
 package groep4.MagazijnApplicatie;
 
+import com.itextpdf.text.DocumentException;
+import groep4.MagazijnApplicatie.entity.Box;
+import groep4.MagazijnApplicatie.entity.StockItem;
 import groep4.MagazijnApplicatie.database.DatabaseManager;
 import groep4.MagazijnApplicatie.entity.OrderLine;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class GUI extends JFrame {
@@ -13,16 +17,13 @@ public class GUI extends JFrame {
     private JButton orderAanmaken;
     private JButton orderAanpassen;
     private JButton orderVerwerken;
-
     private JButton voorraadBeheer;
     private JLabel status;
-
 
     private int loadedOrderID = 0;
     private int robotXCoordinate = 0;
     private int robotYCoordinate = 0;
     private Color statusColor = Color.red;
-
 
     OrderBijhouderPanel orderBijhouder;
     RobotLocatieGUI robotLocatie;
@@ -69,6 +70,7 @@ public class GUI extends JFrame {
         orderInladen.addActionListener(this::clickedOrderLoad);
         orderAanpassen.addActionListener(this::clickedOrderChange);
         orderAanmaken.addActionListener(this::clickedOrderAdded);
+        orderVerwerken.addActionListener(this::clickedOrderProcess);
         voorraadBeheer.addActionListener(this::clickedManageStock);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
@@ -76,8 +78,8 @@ public class GUI extends JFrame {
 
 
     public void clickedOrderLoad(ActionEvent e){
-        OrderIDInvullenDialog orderIDInvullenDialog = new OrderIDInvullenDialog(this, true, this);
-        loadedOrderID = orderIDInvullenDialog.getOrderID();
+        OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true, this);
+        loadedOrderID = order.getOrderID();
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         if (orderLines.isEmpty()) {
             OrderLine or = new OrderLine();
@@ -109,6 +111,29 @@ public class GUI extends JFrame {
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         robotLocatie.repaint();
         orderBijhouder.repaint();
+    }
+
+    public void clickedOrderProcess(ActionEvent e) {
+        /*
+        ArrayList<String> product = new ArrayList<>();
+        product.add("5");
+        product.add("234234");
+        product.add("dit product is geweldig");
+        ArrayList<ArrayList<String>> products = new ArrayList<>();
+        products.add(product);
+        */
+
+        ArrayList<StockItem> productList = new ArrayList<>();
+        for (OrderLine orderLine : orderLines) {
+            productList.add(orderLine.getStockItem());
+        }
+        String[] info = databaseManager.getPackageInfo(loadedOrderID);
+
+        ArrayList<Box> calculatedBoxes = BestFitDecreasing.calculateBPP(productList, 6);
+
+        for (int i = 0; i < calculatedBoxes.size(); i++) {
+            PDFFactory pdfFactory = new PDFFactory(calculatedBoxes.get(i), info[0], info[1], info[2], info[3], info[4], databaseManager, i + 1, calculatedBoxes.size());
+        }
     }
 
     public void clickedManageStock(ActionEvent e){

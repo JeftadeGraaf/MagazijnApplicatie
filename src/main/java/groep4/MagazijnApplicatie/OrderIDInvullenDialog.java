@@ -61,6 +61,4 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
     public int getOrderID() {
         return orderID;
     }
-
-
 }

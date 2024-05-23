@@ -1,5 +1,6 @@
 package groep4.MagazijnApplicatie.database;
 
+import com.mysql.cj.protocol.Resultset;
 import groep4.MagazijnApplicatie.entity.OrderLine;
 import groep4.MagazijnApplicatie.entity.StockItem;
 
@@ -107,7 +108,7 @@ public class DatabaseManager {
             if(rs.next()){
                 return rs.getString("StockItemName");
             } else {
-                return "Leeg";
+                return "Error: geen productnaam gevonden";
             }
         } catch(SQLException e){
             throw new RuntimeException(e);
@@ -136,6 +137,38 @@ public class DatabaseManager {
         } catch (SQLException e){
             throw new RuntimeException(e);
         }
+    }
+
+    public String[] getPackageInfo(int orderId){
+        String[] info = new String[5];
+        try{
+            PreparedStatement statement = connection.prepareStatement("SELECT \n" +
+                    "    c.CustomerID, c.CustomerName, CONCAT(c.DeliveryAddressLine1 ,\" \",  c.DeliveryAddressLine2) AS address, o.OrderDate, o.OrderID\n" +
+                    "FROM \n" +
+                    "    orders o\n" +
+                    "JOIN \n" +
+                    "    customers c\n" +
+                    "ON \n" +
+                    "    o.CustomerID = c.CustomerID\n" +
+                    "WHERE \n" +
+                    "    o.OrderID = ?;");
+            statement.setInt(1, orderId);
+
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                info[0] = String.valueOf(rs.getInt("CustomerID"));
+                info[1] = rs.getString("CustomerName");
+                info[2] = rs.getString("address");
+                info[3] = String.valueOf(rs.getDate("OrderDate"));
+                info[4] = String.valueOf(rs.getInt("OrderID"));
+                return info;
+            }
+
+        }
+        catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return info;
     }
 
     public ArrayList<StockItem> retrieveWarehouseStock(){

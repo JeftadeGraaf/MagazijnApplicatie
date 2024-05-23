@@ -41,7 +41,7 @@ public class RobotLocatieGUI extends JPanel{
         toFetchLabel.setBounds(75, 500, 200, 25);
         fetchedLabel.setBounds(75, 440, 200, 25);
         setVisible(true);
-}
+    }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
