@@ -14,9 +14,7 @@ public class updateOrderDialog extends JDialog implements ActionListener {
 
     private int orderID;
     private ArrayList<OrderLine> orderLines;
-
     private DatabaseManager databaseManager;
-
     private ArrayList<JButton> buttonArray = new ArrayList<>();
     private JLabel removeLabel = new JLabel("Product verwijderen");
     private JLabel addLabel = new JLabel("Product toevoegen");
@@ -28,34 +26,35 @@ public class updateOrderDialog extends JDialog implements ActionListener {
 
     private JButton cancelButton = new JButton("Ok");
 
-    public updateOrderDialog(JFrame frame, boolean modal, int orderID, ArrayList<OrderLine> orderLines, DatabaseManager databaseManager){
+    public updateOrderDialog(JFrame frame, boolean modal, int orderID, ArrayList<OrderLine> orderLines, DatabaseManager databaseManager) {
         super(frame, modal);
         this.orderID = orderID;
         this.orderLines = orderLines;
         this.databaseManager = databaseManager;
         setTitle("Order aanpassen: " + orderID);
-        setSize(500,300);
+        setSize(500, 300);
         setResizable(false);
         setLayout(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        // Initialize components
+        initializeComponents();
+        // Populate initial order lines
+        initializeOrderLines();
+
+        setVisible(true);
+    }
+
+    private void initializeComponents() {
         removeLabel.setBounds(25, 15, 200, 25);
         add(removeLabel);
 
         scrollFrame.setLayout(new GridLayout(0, 2));
 
-        for(OrderLine orderLine : orderLines){
-            String itemName = databaseManager.getProductName(orderLine.getStockItem().getStockItemID());
-            scrollFrame.add(new JLabel("Product " + orderLine.getStockItem().getStockItemID()));
-            JButton button = new JButton("Verwijder");
-            buttonArray.add(button);
-            scrollFrame.add(button);
-            button.addActionListener(this);
-        }
-
         scrollPane = new JScrollPane(scrollFrame);
         scrollPane.setBounds(25, 50, 200, 175);
         add(scrollPane);
+
         addLabel.setBounds(250, 15, 200, 25);
         add(addLabel);
         addTextLabel.setBounds(250, 50, 90, 25);
@@ -69,39 +68,61 @@ public class updateOrderDialog extends JDialog implements ActionListener {
 
         cancelButton.addActionListener(this);
         addButton.addActionListener(this);
-        setVisible(true);
+
+        // Clear any pre-filled text
+        addText.setText("");
+    }
+
+    private void initializeOrderLines() {
+        for (OrderLine orderLine : orderLines) {
+            String itemName = databaseManager.getProductName(orderLine.getStockItem().getStockItemID());
+            scrollFrame.add(new JLabel("Product " + orderLine.getStockItem().getStockItemID()));
+            JButton button = new JButton("Verwijder");
+            buttonArray.add(button);
+            scrollFrame.add(button);
+            button.addActionListener(this);
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource().equals(cancelButton)){
+        if (e.getSource().equals(cancelButton)) {
             dispose();
-        } else if (e.getSource().equals(addButton)){
-            try{
-                int itemID = Integer.parseInt(addText.getText());
+        } else if (e.getSource().equals(addButton)) {
+            try {
+                int itemID = Integer.parseInt(addText.getText().trim());
                 databaseManager.addProductToOrder(orderID, itemID);
                 OrderLine orderLine = new OrderLine();
                 orderLine.setOrderID(orderID);
                 int[] itemCoordinates = databaseManager.getItemRackLocation(itemID);
-                int newItemID = Integer.parseInt(addText.getText());
-                orderLine.setStockItem(new StockItem(newItemID, itemCoordinates[0], itemCoordinates[1], databaseManager.getItemWeight(newItemID)));
+                orderLine.setStockItem(new StockItem(itemID, itemCoordinates[0], itemCoordinates[1], databaseManager.getItemWeight(itemID)));
                 orderLines.add(orderLine);
-                scrollFrame.add(new JLabel("Product " + itemID));
-                scrollFrame.add(new JButton("Verwijder"));
+
+                JLabel itemLabel = new JLabel("Product " + itemID);
+                scrollFrame.add(itemLabel);
+                JButton removeButton = new JButton("Verwijder");
+                scrollFrame.add(removeButton);
+                buttonArray.add(removeButton);
+
+                removeButton.addActionListener(this);
+
                 scrollFrame.revalidate();
                 scrollFrame.repaint();
-            } catch(NumberFormatException numberFormatException){
+
+                // Clear the text field after adding the product
+                addText.setText("");
+            } catch (NumberFormatException numberFormatException) {
                 addText.setText("Ongeldige ingave!");
             }
         } else {
             for (int i = 0; i < buttonArray.size(); i++) {
-                if (e.getSource().equals(buttonArray.get(i))){
+                if (e.getSource().equals(buttonArray.get(i))) {
                     databaseManager.removeOrderLine(orderID, orderLines.get(i).getStockItem().getStockItemID());
                     // Updating the orderLines list
                     orderLines.remove(i);
                     // Removing the corresponding button and label
-                    scrollFrame.remove(buttonArray.get(i));
-                    scrollFrame.remove(i * 2);
+                    scrollFrame.remove(i * 2); // Remove label
+                    scrollFrame.remove(i * 2); // Remove button (after the label is removed, the button shifts to the label's position)
                     // Removing the button from buttonArray
                     buttonArray.remove(i);
                     // Refreshing the panel

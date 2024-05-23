@@ -109,16 +109,6 @@ public class OrderAddDialog extends JDialog implements ActionListener {
         }
     }
 
-    public void trashCanClicked(ActionEvent e){
-        for (int i = 0; i < productButtons.size(); i++) {
-            productsPanel.remove(productButtons.get(i).getParent());
-            productButtons.remove(i);
-            productIds.remove(i);
-            productsPanel.revalidate();
-            productsPanel.repaint();
-            break;
-        }
-    }
 
     public void stockItemIdClicked(ActionEvent e){
         try{
