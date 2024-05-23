@@ -10,10 +10,12 @@ public class RobotLocatieGUI extends JPanel{
     private JLabel fetchedLabel;
     private JLabel robotLabel;
 
+
     private GUI gui;
 
     public RobotLocatieGUI(GUI gui){
         this.gui = gui;
+
         setLayout(null);
         setBorder(BorderFactory.createLineBorder(Color.black));
         fetchedLabel = new JLabel("Opgehaald product");
@@ -56,6 +58,7 @@ public class RobotLocatieGUI extends JPanel{
                     g.drawString(String.valueOf(orderLines.get(i).getStockItem().getStockItemID()), xLabel,yLabel);
                 }
             }
+            drawRobotRoute(g, orderLines);
         }
     }
 
@@ -101,5 +104,29 @@ public class RobotLocatieGUI extends JPanel{
         g2.setStroke(new BasicStroke(4));
         g.drawLine(x, y, x + 10, y - 12);
         g.drawLine(x + 25, y, x + 15, y - 12);
+    }
+
+    public void drawRobotRoute(Graphics g, ArrayList<OrderLine> orderLines){
+        int cellSize = 65;
+        int yStart = 320;
+        int xStart = 320;
+        String route = TSPBruteForce.getRoute(orderLines);
+        String[] coordinatesArray = route.substring(1).split(",");
+        for (int i = 0; i < coordinatesArray.length-1; i++) {
+            int x1 = xStart - ((Integer.parseInt(String.valueOf(coordinatesArray[i].charAt(0))) -1) * cellSize);
+            int y1 = yStart - ((Integer.parseInt(String.valueOf(coordinatesArray[i].charAt(2))) -1) * cellSize);
+            int x2 = xStart - ((Integer.parseInt(String.valueOf(coordinatesArray[i+1].charAt(0))) -1) * cellSize);
+            int y2 = yStart - ((Integer.parseInt(String.valueOf(coordinatesArray[i+1].charAt(2))) -1) * cellSize);
+
+            if(y1 > yStart){
+                y1 = yStart;
+            }
+            if (y2 > yStart){
+                y2 = yStart;
+            }
+            if(x1 != x2 || y1 != y2){
+                g.drawLine(x1, y1, x2, y2);
+            }
+        }
     }
 }

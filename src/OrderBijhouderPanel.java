@@ -35,12 +35,13 @@ public class OrderBijhouderPanel extends JPanel {
         int x = 20;
         int y = 20;
         if (orderLines.getFirst().getOrderID() == -1) {
-            g.setColor(Color.RED);
-            g.drawString("Ongeldige invoer, voer een numeriek order-ID in", x, y);
+            g.drawString("Momenteel geen ingeladen order gevonden.", x, y);
             return;
         }
         g.setFont(boldFont);
-        g.drawString("Order-ID: " + orderLines.get(0).getOrderID(), x, y);
+        int orderID = gui.getLoadedOrderID();
+        System.out.println(orderID);
+        g.drawString("Order-ID: " + orderID, x, y);
         y += 20;
 
         ArrayList<StockItem> itemsInOrder = new ArrayList<>();

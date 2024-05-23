@@ -74,8 +74,8 @@ public class GUI extends JFrame {
 
 
     public void clickedOrderLoad(ActionEvent e){
-        OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
-        loadedOrderID = order.getOrderID();
+        OrderIDInvullenDialog orderIDInvullenDialog = new OrderIDInvullenDialog(this, true, this);
+        loadedOrderID = orderIDInvullenDialog.getOrderID();
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         if (orderLines.isEmpty()) {
             OrderLine or = new OrderLine();
@@ -134,5 +134,9 @@ public class GUI extends JFrame {
 
     public ArrayList<OrderLine> getOrderLines() {
         return orderLines;
+    }
+
+    public int getLoadedOrderID(){
+        return loadedOrderID;
     }
 }
