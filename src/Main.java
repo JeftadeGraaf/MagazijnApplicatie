@@ -1,3 +1,4 @@
+import com.itextpdf.text.DocumentException;
 import database.DatabaseManager;
 import entity.StockItem;
 
@@ -7,8 +8,8 @@ import java.util.ArrayList;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException, IOException {
+    public static void main(String[] args) throws SQLException, IOException, DocumentException {
         DatabaseManager databaseManager = new DatabaseManager();
-        GUI gui = new GUI(databaseManager);
+        new GUI(databaseManager);
     }
 }

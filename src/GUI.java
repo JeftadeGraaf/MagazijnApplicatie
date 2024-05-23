@@ -1,9 +1,13 @@
+import com.itextpdf.text.DocumentException;
 import database.DatabaseManager;
+import entity.Box;
 import entity.OrderLine;
+import entity.StockItem;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class GUI extends JFrame {
@@ -59,6 +63,7 @@ public class GUI extends JFrame {
         orderInladen.addActionListener(this::clickedOrderLoad);
         orderAanpassen.addActionListener(this::clickedOrderChange);
         orderAanmaken.addActionListener(this::clickedOrderAdded);
+        orderVerwerken.addActionListener(this::clickedOrderProcess);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
@@ -98,6 +103,29 @@ public class GUI extends JFrame {
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         robotLocatie.repaint();
         orderBijhouder.repaint();
+    }
+
+    public void clickedOrderProcess(ActionEvent e) {
+        /*
+        ArrayList<String> product = new ArrayList<>();
+        product.add("5");
+        product.add("234234");
+        product.add("dit product is geweldig");
+        ArrayList<ArrayList<String>> products = new ArrayList<>();
+        products.add(product);
+        */
+
+        ArrayList<StockItem> productList = new ArrayList<>();
+        for(OrderLine orderLine : orderLines){
+            productList.add(orderLine.getStockItem());
+        }
+        String[] info = databaseManager.getPackageInfo(loadedOrderID);
+
+        ArrayList<Box> calculatedBoxes =  BestFitDecreasing.calculateBPP(productList, 6);
+
+        for (int i = 0; i < calculatedBoxes.size(); i++) {
+            PDFFactory pdfFactory = new PDFFactory(calculatedBoxes.get(i), info[0], info[1], info[2], info[3], info[4], databaseManager, i+1, calculatedBoxes.size());
+        }
     }
 
     public void changeStatus(String newStatus, Color color){

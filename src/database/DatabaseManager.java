@@ -117,6 +117,38 @@ public class DatabaseManager {
 
     }
 
+    public String[] getPackageInfo(int orderId){
+        String[] info = new String[5];
+        try{
+            PreparedStatement statement = connection.prepareStatement("SELECT \n" +
+                    "    c.CustomerID, c.CustomerName, CONCAT(c.DeliveryAddressLine1 ,\" \",  c.DeliveryAddressLine2) AS address, o.OrderDate, o.OrderID\n" +
+                    "FROM \n" +
+                    "    orders o\n" +
+                    "JOIN \n" +
+                    "    customers c\n" +
+                    "ON \n" +
+                    "    o.CustomerID = c.CustomerID\n" +
+                    "WHERE \n" +
+                    "    o.OrderID = ?;");
+            statement.setInt(1, orderId);
+
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()){
+                info[0] = String.valueOf(rs.getInt("CustomerID"));
+                info[1] = rs.getString("CustomerName");
+                info[2] = rs.getString("address");
+                info[3] = String.valueOf(rs.getDate("OrderDate"));
+                info[4] = String.valueOf(rs.getInt("OrderID"));
+                return info;
+            }
+
+        }
+        catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return info;
+    }
+
 
     public void closeConnection() throws SQLException {
         connection.close();
