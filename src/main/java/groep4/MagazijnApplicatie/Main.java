@@ -1,4 +1,6 @@
-import database.DatabaseManager;
+package groep4.MagazijnApplicatie;
+
+import groep4.MagazijnApplicatie.database.DatabaseManager;
 import java.io.IOException;
 import java.sql.SQLException;
 

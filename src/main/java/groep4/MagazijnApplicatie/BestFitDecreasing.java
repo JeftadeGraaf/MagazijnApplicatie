@@ -1,5 +1,7 @@
-import entity.Box;
-import entity.StockItem;
+package groep4.MagazijnApplicatie;
+
+import groep4.MagazijnApplicatie.entity.Box;
+import groep4.MagazijnApplicatie.entity.StockItem;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: Main
+groep4.MagazijnApplicatie.Main-Class: groep4.MagazijnApplicatie.Main
 

@@ -1,4 +1,4 @@
-package entity;
+package groep4.MagazijnApplicatie.entity;
 
 import java.util.ArrayList;
 

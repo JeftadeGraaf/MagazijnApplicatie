@@ -1,12 +1,10 @@
-package database;
+package groep4.MagazijnApplicatie.database;
 
-import com.mysql.cj.protocol.Resultset;
-import entity.OrderLine;
-import entity.StockItem;
+import groep4.MagazijnApplicatie.entity.OrderLine;
+import groep4.MagazijnApplicatie.entity.StockItem;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class DatabaseManager {
 
