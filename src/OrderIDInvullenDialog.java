@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class OrderIDInvullenDialog extends JDialog implements ActionListener {
     private JButton okButton;
@@ -14,11 +12,9 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
     private JTextField OrderIDTekstveld;
 
     private int orderID;
-    private GUI gui;
 
-    public OrderIDInvullenDialog(JFrame frame, boolean modaal, GUI gui){
+    public OrderIDInvullenDialog(JFrame frame, boolean modaal){
         super(frame,modaal);
-        this.gui = gui;
         setSize(310,135);
         setResizable(false);
         setTitle("Order");
@@ -46,19 +42,14 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
         if (e.getSource() == okButton) {
             try {
                 orderID = Integer.parseInt(OrderIDTekstveld.getText());
-                dispose();
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Ongeldig order-ID opgegeven, numerieke waarde vereist", "Fout", JOptionPane.ERROR_MESSAGE);
+                orderID = -1;
             }
-        } else if (e.getSource() == annuleren){
-            orderID = gui.getLoadedOrderID();
-            dispose();
         }
+        dispose();
     }
 
     public int getOrderID() {
         return orderID;
     }
-
-
 }
