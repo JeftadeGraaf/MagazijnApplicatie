@@ -23,20 +23,25 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
         setResizable(false);
         setTitle("Order");
         setLayout(null);
+
         OrderIDTekstveld = new JTextField("", 8);
         LabelOrderID = new JLabel("Vul in orderID:");
         annuleren = new JButton("Annuleren");
         okButton = new JButton("OK");
+
         add(LabelOrderID);
         add(OrderIDTekstveld);
         add(annuleren);
         add(okButton);
+
         LabelOrderID.setBounds(25, 20, 120, 25);
         OrderIDTekstveld.setBounds(155, 20, 120, 25);
         annuleren.setBounds(25, 60, 120, 25);
         okButton.setBounds(155, 60, 120, 25);
+
         okButton.addActionListener(this);
         annuleren.addActionListener(this);
+
         setVisible(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
@@ -51,7 +56,7 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Ongeldig order-ID opgegeven, numerieke waarde vereist", "Fout", JOptionPane.ERROR_MESSAGE);
             }
         } else if (e.getSource() == annuleren){
-            orderID = gui.getLoadedOrderID();
+            orderID = -1; // Use an invalid value to indicate cancellation
             dispose();
         }
     }
