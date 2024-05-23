@@ -109,7 +109,7 @@ public class DatabaseManager {
             if(rs.next()){
                 return rs.getString("StockItemName");
             } else {
-                return "Error: geen productnaam gevonden";
+                return "Leeg";
             }
         } catch(SQLException e){
             throw new RuntimeException(e);
@@ -172,4 +172,48 @@ public class DatabaseManager {
         }
     }
 
+    public ArrayList<StockItem> retrieveWarehouseStock(){
+        try {
+            // Language=MySQL
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `warehouse_rack`");
+            ResultSet rs = statement.executeQuery();
+            ArrayList<StockItem> itemList = new ArrayList<>();
+            for (int i = 0; rs.next(); i++) {
+                int itemID = rs.getInt("itemID");
+                int xCoord = rs.getInt("locationX");
+                int yCoord = rs.getInt("locationY");
+                int itemWeight = getItemWeight(itemID);
+                itemList.add(new StockItem(itemID, xCoord, yCoord, itemWeight));
+            }
+            return itemList;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean updateRackCell(int itemID, int x, int y){
+        try {
+            // Language=MySQL
+            PreparedStatement statement = connection.prepareStatement("UPDATE `warehouse_rack` SET `itemID` = ? WHERE locationX = ? AND locationY = ?");
+            statement.setInt(1, itemID);
+            statement.setInt(2, x);
+            statement.setInt(3, y);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean removeItemFromStock(int itemID){
+        try {
+            // Language=MySQL
+            PreparedStatement statement = connection.prepareStatement("UPDATE `warehouse_rack` SET `itemID` = null WHERE `itemID` = ?");
+            statement.setInt(1, itemID);
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
 }

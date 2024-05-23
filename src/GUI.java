@@ -15,12 +15,16 @@ public class GUI extends JFrame {
     private JButton orderAanmaken;
     private JButton orderAanpassen;
     private JButton orderVerwerken;
+
+    private JButton voorraadBeheer;
     private JLabel status;
+
 
     private int loadedOrderID = 0;
     private int robotXCoordinate = 0;
     private int robotYCoordinate = 0;
     private Color statusColor = Color.red;
+
 
     OrderBijhouderPanel orderBijhouder;
     RobotLocatieGUI robotLocatie;
@@ -40,13 +44,16 @@ public class GUI extends JFrame {
         orderAanmaken = new JButton("Order aanmaken");
         orderInladen= new JButton("Order inladen");
         orderVerwerken = new JButton("Order verwerken");
+        voorraadBeheer = new JButton("Voorraadbeheer");
         status = new JLabel("STATUS: Handmatig");
         orderBijhouder = new OrderBijhouderPanel(this, databaseManager);
+
         orderInladen.setBounds(500,25,225,25);
         orderBijhouder.setBounds(500,60,475,400);
         orderAanmaken.setBounds(750,25,225,25);
         orderAanpassen.setBounds(500,470,225,25);
         orderVerwerken.setBounds(750,470,225,25);
+        voorraadBeheer.setBounds(750, 525, 225, 25);
         robotLocatie = new RobotLocatieGUI(this);
         robotLocatie.setBounds(25,25,450,550);
         add(orderInladen);
@@ -54,6 +61,7 @@ public class GUI extends JFrame {
         add(status);
         add(orderBijhouder);
         add(orderAanpassen);
+        add(voorraadBeheer);
         orderAanpassen.setEnabled(false);
         add(orderVerwerken);
         orderVerwerken.setEnabled(false);
@@ -64,14 +72,15 @@ public class GUI extends JFrame {
         orderAanpassen.addActionListener(this::clickedOrderChange);
         orderAanmaken.addActionListener(this::clickedOrderAdded);
         orderVerwerken.addActionListener(this::clickedOrderProcess);
+        voorraadBeheer.addActionListener(this::clickedManageStock);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
 
 
     public void clickedOrderLoad(ActionEvent e){
-        OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
-        loadedOrderID = order.getOrderID();
+        OrderIDInvullenDialog orderIDInvullenDialog = new OrderIDInvullenDialog(this, true, this);
+        loadedOrderID = orderIDInvullenDialog.getOrderID();
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         if (orderLines.isEmpty()) {
             OrderLine or = new OrderLine();
@@ -126,6 +135,11 @@ public class GUI extends JFrame {
         for (int i = 0; i < calculatedBoxes.size(); i++) {
             PDFFactory pdfFactory = new PDFFactory(calculatedBoxes.get(i), info[0], info[1], info[2], info[3], info[4], databaseManager, i+1, calculatedBoxes.size());
         }
+    public void clickedManageStock(ActionEvent e){
+        StockUpdateDialog stockUpdateDialog = new StockUpdateDialog(this, true, databaseManager);
+        orderLines = databaseManager.getOrderLines(loadedOrderID);
+        robotLocatie.repaint();
+        orderBijhouder.repaint();
     }
 
     public void changeStatus(String newStatus, Color color){
@@ -146,5 +160,9 @@ public class GUI extends JFrame {
 
     public ArrayList<OrderLine> getOrderLines() {
         return orderLines;
+    }
+
+    public int getLoadedOrderID(){
+        return loadedOrderID;
     }
 }
