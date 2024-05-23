@@ -1,15 +1,14 @@
 package groep4.MagazijnApplicatie;
 
-import com.itextpdf.text.DocumentException;
-import groep4.MagazijnApplicatie.entity.Box;
-import groep4.MagazijnApplicatie.entity.StockItem;
+import com.fazecast.jSerialComm.SerialPort;
 import groep4.MagazijnApplicatie.database.DatabaseManager;
+import groep4.MagazijnApplicatie.entity.Box;
 import groep4.MagazijnApplicatie.entity.OrderLine;
+import groep4.MagazijnApplicatie.entity.StockItem;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class GUI extends JFrame {
@@ -24,6 +23,7 @@ public class GUI extends JFrame {
     private int robotXCoordinate = 0;
     private int robotYCoordinate = 0;
     private Color statusColor = Color.red;
+    private String tspRoute;
 
     OrderBijhouderPanel orderBijhouder;
     RobotLocatieGUI robotLocatie;
@@ -33,7 +33,8 @@ public class GUI extends JFrame {
 
     public GUI(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
-        //serialManager = new groep4.MagazijnApplicatie.SerialManager(this);
+
+        serialManager = new SerialManager(this);
         setLayout(null);
         setSize(1000, 650);
         setTitle("HMI Applicatie");
@@ -92,10 +93,7 @@ public class GUI extends JFrame {
             orderVerwerken.setEnabled(true);
             orderAanpassen.setEnabled(true);
         }
-        System.out.println("GUI:");
-        for (OrderLine orderLine : orderLines){
-            System.out.println(orderLine.getStockItem().getStockItemID());
-        }
+
         robotLocatie.repaint();
         orderBijhouder.repaint();
     }
@@ -138,6 +136,7 @@ public class GUI extends JFrame {
         for (int i = 0; i < calculatedBoxes.size(); i++) {
             PDFFactory pdfFactory = new PDFFactory(calculatedBoxes.get(i), info[0], info[1], info[2], info[3], info[4], databaseManager, i + 1, calculatedBoxes.size());
         }
+        serialManager.sendMessage(tspRoute);
     }
 
     public void clickedManageStock(ActionEvent e){
@@ -148,6 +147,7 @@ public class GUI extends JFrame {
     }
 
     public void changeStatus(String newStatus, Color color){
+        System.out.println(newStatus);
         status.setText("Status: " + newStatus);
         statusColor = color;
         orderBijhouder.repaint();
@@ -169,5 +169,9 @@ public class GUI extends JFrame {
 
     public int getLoadedOrderID(){
         return loadedOrderID;
+    }
+
+    public void setTSPRoute(String route) {
+        this.tspRoute = route;
     }
 }

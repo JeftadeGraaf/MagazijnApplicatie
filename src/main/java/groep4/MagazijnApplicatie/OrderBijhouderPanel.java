@@ -33,10 +33,6 @@ public class OrderBijhouderPanel extends JPanel {
         Font italicFont = new Font("arial", Font.ITALIC, 14);
         Font defaultFont = new Font("arial", Font.PLAIN, 12);
         ArrayList<OrderLine> orderLines = gui.getOrderLines();
-        System.out.println("PANEL:");
-        for (OrderLine orderLine : orderLines){
-            System.out.println(orderLine.getStockItem().getStockItemID());
-        }
         if (orderLines == null || orderLines.isEmpty()) {
             return;
         }
@@ -79,6 +75,8 @@ public class OrderBijhouderPanel extends JPanel {
             }
             y += 10;
         }
-        g.drawString(TSPBruteForce.getRoute(orderLines), x, y);
+        String tspRoute = TSPBruteForce.getRoute(orderLines);
+        gui.setTSPRoute(tspRoute);
+        g.drawString(tspRoute, x, y);
     }
 }

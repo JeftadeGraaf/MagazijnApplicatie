@@ -97,6 +97,7 @@ public class TSPBruteForce {
                 route = String.format("%s%s.%s", route, stockItem.getX(), stockItem.getY());
             }
         }
+        orderLines.removeFirst();
 
         return route;
     }
