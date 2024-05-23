@@ -92,6 +92,10 @@ public class GUI extends JFrame {
             orderVerwerken.setEnabled(true);
             orderAanpassen.setEnabled(true);
         }
+        System.out.println("GUI:");
+        for (OrderLine orderLine : orderLines){
+            System.out.println(orderLine.getStockItem().getStockItemID());
+        }
         robotLocatie.repaint();
         orderBijhouder.repaint();
     }

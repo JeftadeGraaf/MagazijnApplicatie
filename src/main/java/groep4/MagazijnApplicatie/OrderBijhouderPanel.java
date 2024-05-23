@@ -1,5 +1,6 @@
 package groep4.MagazijnApplicatie;
 
+import com.mysql.cj.x.protobuf.MysqlxCrud;
 import groep4.MagazijnApplicatie.database.DatabaseManager;
 import groep4.MagazijnApplicatie.entity.OrderLine;
 import groep4.MagazijnApplicatie.entity.Box;
@@ -32,6 +33,10 @@ public class OrderBijhouderPanel extends JPanel {
         Font italicFont = new Font("arial", Font.ITALIC, 14);
         Font defaultFont = new Font("arial", Font.PLAIN, 12);
         ArrayList<OrderLine> orderLines = gui.getOrderLines();
+        System.out.println("PANEL:");
+        for (OrderLine orderLine : orderLines){
+            System.out.println(orderLine.getStockItem().getStockItemID());
+        }
         if (orderLines == null || orderLines.isEmpty()) {
             return;
         }
