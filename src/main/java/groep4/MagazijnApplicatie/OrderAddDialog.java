@@ -23,7 +23,7 @@ public class OrderAddDialog extends JDialog implements ActionListener {
     private JLabel errorText = new JLabel("");
     private DatabaseManager databaseManager;
 
-    public OrderAddDialog(JFrame jframe, boolean modal, DatabaseManager databaseManager){
+    public OrderAddDialog(JFrame jframe, boolean modal, DatabaseManager databaseManager, int loadedOrderID){
         super(jframe, modal);
         this.databaseManager = databaseManager;
         setSize(620, 250);
@@ -82,7 +82,9 @@ public class OrderAddDialog extends JDialog implements ActionListener {
 
         add(errorText);
 
-
+        if(orderId == 0){
+            orderId = loadedOrderID;
+        }
         setVisible(true);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
     }

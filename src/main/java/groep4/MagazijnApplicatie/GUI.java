@@ -110,7 +110,7 @@ public class GUI extends JFrame {
     }
 
     public void clickedOrderAdded(ActionEvent e){
-        OrderAddDialog addDialog = new OrderAddDialog(this, true, databaseManager);
+        OrderAddDialog addDialog = new OrderAddDialog(this, true, databaseManager, loadedOrderID);
         loadedOrderID = addDialog.getOrderId();
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         robotLocatie.repaint();
