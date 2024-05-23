@@ -17,6 +17,7 @@ public class GUI extends JFrame {
     private JButton orderAanmaken;
     private JButton orderAanpassen;
     private JButton orderVerwerken;
+    private JButton voorraadBeheer;
     private JLabel status;
 
     private int loadedOrderID = 0;
@@ -77,7 +78,7 @@ public class GUI extends JFrame {
 
 
     public void clickedOrderLoad(ActionEvent e){
-        OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
+        OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true, this);
         loadedOrderID = order.getOrderID();
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         if (orderLines.isEmpty()) {
@@ -123,15 +124,15 @@ public class GUI extends JFrame {
         */
 
         ArrayList<StockItem> productList = new ArrayList<>();
-        for(OrderLine orderLine : orderLines){
+        for (OrderLine orderLine : orderLines) {
             productList.add(orderLine.getStockItem());
         }
         String[] info = databaseManager.getPackageInfo(loadedOrderID);
 
-        ArrayList<Box> calculatedBoxes =  BestFitDecreasing.calculateBPP(productList, 6);
+        ArrayList<Box> calculatedBoxes = BestFitDecreasing.calculateBPP(productList, 6);
 
         for (int i = 0; i < calculatedBoxes.size(); i++) {
-            PDFFactory pdfFactory = new PDFFactory(calculatedBoxes.get(i), info[0], info[1], info[2], info[3], info[4], databaseManager, i+1, calculatedBoxes.size());
+            PDFFactory pdfFactory = new PDFFactory(calculatedBoxes.get(i), info[0], info[1], info[2], info[3], info[4], databaseManager, i + 1, calculatedBoxes.size());
         }
     }
 

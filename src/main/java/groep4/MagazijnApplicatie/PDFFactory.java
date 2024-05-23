@@ -60,7 +60,7 @@ public class PDFFactory {
     }
 
     private void addLogo(Document document) throws DocumentException, IOException {
-        Path path = Paths.get("src/resources/Logo_NerdyGadgets.png");
+        Path path = Paths.get("src/main/resources/Logo_NerdyGadgets.png");
         Image image = Image.getInstance(path.toAbsolutePath().toString());
         image.scalePercent(3);
         PdfPCell imageCell = new PdfPCell(image);
