@@ -20,7 +20,7 @@ public class GUI extends JFrame {
     private JButton voorraadBeheer;
     private JLabel status;
 
-    private int loadedOrderID = 0;
+    private int loadedOrderID = -1;
     private int robotXCoordinate = 0;
     private int robotYCoordinate = 0;
     private Color statusColor = Color.red;

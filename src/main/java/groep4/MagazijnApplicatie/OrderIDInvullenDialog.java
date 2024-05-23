@@ -10,7 +10,7 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
     private JLabel LabelOrderID;
     private JTextField OrderIDTekstveld;
 
-    private int orderID;
+    private int orderID = -1;
     private GUI gui;
 
     public OrderIDInvullenDialog(JFrame frame, boolean modaal, GUI gui){
@@ -53,7 +53,7 @@ public class OrderIDInvullenDialog extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Ongeldig order-ID opgegeven, numerieke waarde vereist", "Fout", JOptionPane.ERROR_MESSAGE);
             }
         } else if (e.getSource() == annuleren){
-            orderID = -1; // Use an invalid value to indicate cancellation
+            orderID = -1;
             dispose();
         }
     }

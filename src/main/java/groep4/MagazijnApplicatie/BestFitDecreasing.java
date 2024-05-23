@@ -39,10 +39,8 @@ public class BestFitDecreasing {
 
         // Print the bins and their contents
         for (int i = 0; i < boxList.size(); i++) {
-            System.out.println("Bin " + (i + 1) + ": " + boxList.get(i));
             for (int j = 0; j < boxList.get(i).getProductlist().size(); j++) {
                 int itemId = boxList.get(i).getProductlist().get(j).getStockItemID();
-                System.out.println(itemId);
             }
         }
         return boxList;
