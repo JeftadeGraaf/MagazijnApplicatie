@@ -1,18 +1,17 @@
+package groep4.MagazijnApplicatie;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import database.DatabaseManager;
-import entity.Box;
-import entity.StockItem;
+import groep4.MagazijnApplicatie.database.DatabaseManager;
+import groep4.MagazijnApplicatie.entity.Box;
 
-import javax.xml.crypto.Data;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.stream.Stream;
 
 public class PDFFactory {
@@ -39,7 +38,11 @@ public class PDFFactory {
 
         Document document = new Document();
         try {
-            PdfWriter.getInstance(document, new FileOutputStream(System.getProperty("user.dir") + "/src/pakbonnen/" + orderId + "(" + currentBoxNumber + "," + maxBoxNumber + ").pdf"));
+            File file = new File(System.getProperty("user.dir") + "/pakbonnen/");
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            PdfWriter.getInstance(document, new FileOutputStream(System.getProperty("user.dir") + "/pakbonnen/" + orderId + "(" + currentBoxNumber + "," + maxBoxNumber + ").pdf"));
             document.open();
 
             addLogo(document);
