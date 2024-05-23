@@ -150,7 +150,8 @@ public class DatabaseManager {
                 int itemID = rs.getInt("itemID");
                 int xCoord = rs.getInt("locationX");
                 int yCoord = rs.getInt("locationY");
-                itemList.add(new StockItem(itemID, xCoord, yCoord));
+                int itemWeight = getItemWeight(itemID);
+                itemList.add(new StockItem(itemID, xCoord, yCoord, itemWeight));
             }
             return itemList;
         } catch (SQLException e) {
