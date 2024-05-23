@@ -1,8 +1,10 @@
+package groep4.MagazijnApplicatie;
+
 import com.itextpdf.text.DocumentException;
-import database.DatabaseManager;
-import entity.Box;
-import entity.OrderLine;
-import entity.StockItem;
+import groep4.MagazijnApplicatie.entity.Box;
+import groep4.MagazijnApplicatie.entity.StockItem;
+import groep4.MagazijnApplicatie.database.DatabaseManager;
+import groep4.MagazijnApplicatie.entity.OrderLine;
 
 import javax.swing.*;
 import java.awt.*;

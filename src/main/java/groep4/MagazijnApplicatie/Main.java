@@ -1,6 +1,8 @@
+package groep4.MagazijnApplicatie;
+
+import groep4.MagazijnApplicatie.database.DatabaseManager;
+import groep4.MagazijnApplicatie.entity.StockItem;
 import com.itextpdf.text.DocumentException;
-import database.DatabaseManager;
-import entity.StockItem;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -10,6 +12,6 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, IOException, DocumentException {
         DatabaseManager databaseManager = new DatabaseManager();
-        new GUI(databaseManager);
+        GUI gui = new GUI(databaseManager);
     }
 }

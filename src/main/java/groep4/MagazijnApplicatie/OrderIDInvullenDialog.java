@@ -1,7 +1,6 @@
-import database.DatabaseManager;
+package groep4.MagazijnApplicatie;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
