@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Box {
     private ArrayList<StockItem> productlist;
 
-    private int capacity;
+    private final int capacity;
     private int orderNumber;
     private int customerId;
 
@@ -19,7 +19,7 @@ public class Box {
     public int getRemainingCapacity(){
         int totalWeight = 0;
         for(StockItem item : productlist){
-            totalWeight += item.getWeight();
+            totalWeight += item.weight();
         }
         return capacity - totalWeight;
     }
@@ -40,16 +40,8 @@ public class Box {
         return productlist;
     }
 
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public int getOrderNumber() {
-        return orderNumber;
-    }
-
     public void addItem(StockItem item) {
-        if (item.getWeight() <= getRemainingCapacity()) {
+        if (item.weight() <= getRemainingCapacity()) {
             productlist.add(item);
         }
     }

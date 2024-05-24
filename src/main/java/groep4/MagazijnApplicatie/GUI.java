@@ -1,6 +1,5 @@
 package groep4.MagazijnApplicatie;
 
-import com.itextpdf.text.DocumentException;
 import groep4.MagazijnApplicatie.entity.Box;
 import groep4.MagazijnApplicatie.entity.StockItem;
 import groep4.MagazijnApplicatie.database.DatabaseManager;
@@ -9,16 +8,12 @@ import groep4.MagazijnApplicatie.entity.OrderLine;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class GUI extends JFrame {
-    private JButton orderInladen;
-    private JButton orderAanmaken;
-    private JButton orderAanpassen;
-    private JButton orderVerwerken;
-    private JButton voorraadBeheer;
-    private JLabel status;
+    private final JButton orderAanpassen;
+    private final JButton orderVerwerken;
+    private final JLabel status;
 
     private int loadedOrderID = -1;
     private int robotXCoordinate = 0;
@@ -27,7 +22,7 @@ public class GUI extends JFrame {
 
     OrderBijhouderPanel orderBijhouder;
     RobotLocatieGUI robotLocatie;
-    private DatabaseManager databaseManager;
+    private final DatabaseManager databaseManager;
     private SerialManager serialManager;
     private ArrayList<OrderLine> orderLines = new ArrayList<>();
 
@@ -40,10 +35,10 @@ public class GUI extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         orderAanpassen = new JButton("Order aanpassen");
-        orderAanmaken = new JButton("Order aanmaken");
-        orderInladen= new JButton("Order inladen");
+        JButton orderAanmaken = new JButton("Order aanmaken");
+        JButton orderInladen = new JButton("Order inladen");
         orderVerwerken = new JButton("Order verwerken");
-        voorraadBeheer = new JButton("Voorraadbeheer");
+        JButton voorraadBeheer = new JButton("Voorraadbeheer");
         status = new JLabel("STATUS: Handmatig");
         orderBijhouder = new OrderBijhouderPanel(this, databaseManager);
 
@@ -78,7 +73,7 @@ public class GUI extends JFrame {
 
 
     public void clickedOrderLoad(ActionEvent e){
-        OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true, this);
+        OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
         loadedOrderID = order.getOrderID();
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         if (orderLines.isEmpty()) {
@@ -94,7 +89,7 @@ public class GUI extends JFrame {
         }
         System.out.println("GUI:");
         for (OrderLine orderLine : orderLines){
-            System.out.println(orderLine.getStockItem().getStockItemID());
+            System.out.println(orderLine.getStockItem().stockItemID());
         }
         robotLocatie.repaint();
         orderBijhouder.repaint();
@@ -118,15 +113,6 @@ public class GUI extends JFrame {
     }
 
     public void clickedOrderProcess(ActionEvent e) {
-        /*
-        ArrayList<String> product = new ArrayList<>();
-        product.add("5");
-        product.add("234234");
-        product.add("dit product is geweldig");
-        ArrayList<ArrayList<String>> products = new ArrayList<>();
-        products.add(product);
-        */
-
         ArrayList<StockItem> productList = new ArrayList<>();
         for (OrderLine orderLine : orderLines) {
             productList.add(orderLine.getStockItem());
@@ -136,12 +122,12 @@ public class GUI extends JFrame {
         ArrayList<Box> calculatedBoxes = BestFitDecreasing.calculateBPP(productList, 6);
 
         for (int i = 0; i < calculatedBoxes.size(); i++) {
-            PDFFactory pdfFactory = new PDFFactory(calculatedBoxes.get(i), info[0], info[1], info[2], info[3], info[4], databaseManager, i + 1, calculatedBoxes.size());
+            new PDFFactory(calculatedBoxes.get(i), info[0], info[1], info[2], info[3], info[4], databaseManager, i + 1, calculatedBoxes.size());
         }
     }
 
     public void clickedManageStock(ActionEvent e){
-        StockUpdateDialog stockUpdateDialog = new StockUpdateDialog(this, true, databaseManager);
+        new StockUpdateDialog(this, true, databaseManager);
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         robotLocatie.repaint();
         orderBijhouder.repaint();

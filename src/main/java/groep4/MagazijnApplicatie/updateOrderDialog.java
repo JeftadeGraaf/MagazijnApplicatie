@@ -12,19 +12,18 @@ import java.util.ArrayList;
 
 public class updateOrderDialog extends JDialog implements ActionListener {
 
-    private int orderID;
-    private ArrayList<OrderLine> orderLines;
-    private DatabaseManager databaseManager;
-    private ArrayList<JButton> buttonArray = new ArrayList<>();
-    private JLabel removeLabel = new JLabel("Product verwijderen");
-    private JLabel addLabel = new JLabel("Product toevoegen");
-    private JLabel addTextLabel = new JLabel("Product ID:");
-    private JTextField addText = new JTextField("");
-    private JButton addButton = new JButton("Toevoegen aan order");
-    private JPanel scrollFrame = new JPanel();
-    private JScrollPane scrollPane;
+    private final int orderID;
+    private final ArrayList<OrderLine> orderLines;
+    private final DatabaseManager databaseManager;
+    private final ArrayList<JButton> buttonArray = new ArrayList<>();
+    private final JLabel removeLabel = new JLabel("Product verwijderen");
+    private final JLabel addLabel = new JLabel("Product toevoegen");
+    private final JLabel addTextLabel = new JLabel("Product ID:");
+    private final JTextField addText = new JTextField("");
+    private final JButton addButton = new JButton("Toevoegen aan order");
+    private final JPanel scrollFrame = new JPanel();
 
-    private JButton cancelButton = new JButton("Ok");
+    private final JButton cancelButton = new JButton("Ok");
 
     public updateOrderDialog(JFrame frame, boolean modal, int orderID, ArrayList<OrderLine> orderLines, DatabaseManager databaseManager) {
         super(frame, modal);
@@ -51,7 +50,7 @@ public class updateOrderDialog extends JDialog implements ActionListener {
 
         scrollFrame.setLayout(new GridLayout(0, 2));
 
-        scrollPane = new JScrollPane(scrollFrame);
+        JScrollPane scrollPane = new JScrollPane(scrollFrame);
         scrollPane.setBounds(25, 50, 200, 175);
         add(scrollPane);
 
@@ -75,8 +74,8 @@ public class updateOrderDialog extends JDialog implements ActionListener {
 
     private void initializeOrderLines() {
         for (OrderLine orderLine : orderLines) {
-            String itemName = databaseManager.getProductName(orderLine.getStockItem().getStockItemID());
-            scrollFrame.add(new JLabel("Product " + orderLine.getStockItem().getStockItemID()));
+            databaseManager.getProductName(orderLine.getStockItem().stockItemID());
+            scrollFrame.add(new JLabel("Product " + orderLine.getStockItem().stockItemID()));
             JButton button = new JButton("Verwijder");
             buttonArray.add(button);
             scrollFrame.add(button);
@@ -117,7 +116,7 @@ public class updateOrderDialog extends JDialog implements ActionListener {
         } else {
             for (int i = 0; i < buttonArray.size(); i++) {
                 if (e.getSource().equals(buttonArray.get(i))) {
-                    databaseManager.removeOrderLine(orderID, orderLines.get(i).getStockItem().getStockItemID());
+                    databaseManager.removeOrderLine(orderID, orderLines.get(i).getStockItem().stockItemID());
                     // Updating the orderLines list
                     orderLines.remove(i);
                     // Removing the corresponding button and label

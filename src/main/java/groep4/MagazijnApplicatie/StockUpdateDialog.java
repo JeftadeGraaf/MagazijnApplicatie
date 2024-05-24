@@ -11,26 +11,20 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class StockUpdateDialog extends JDialog implements ActionListener {
-    private DatabaseManager databaseManager;
+    private final DatabaseManager databaseManager;
 
-    private ArrayList<JButton> buttonArray = new ArrayList<>();
+    private final ArrayList<JButton> buttonArray = new ArrayList<>();
     private ArrayList<StockItem> stockList = new ArrayList<>();
-    private ArrayList<StockItem> removeableItems = new ArrayList<>();
-    private JLabel removeLabel = new JLabel("Producten verwijderen uit stelling");
-    private JLabel addLabel = new JLabel("Vak aanvullen/wijzigen");
-    private JLabel addTextLabel = new JLabel("Product ID:");
-    private JTextField addText = new JTextField("");
-    private JLabel addXLabel = new JLabel("X-coördinaat:");
-    private JTextField addXText = new JTextField("");
-    private JLabel addYLabel = new JLabel("Y-coördinaat:");
-    private JTextField addYText = new JTextField("");
+    private final ArrayList<StockItem> removeableItems = new ArrayList<>();
+    private final JTextField addText = new JTextField("");
+    private final JTextField addXText = new JTextField("");
+    private final JTextField addYText = new JTextField("");
 
-    private JLabel errorText = new JLabel("");
-    private JButton addButton = new JButton("Aanpassen");
-    private JPanel scrollFrame = new JPanel();
-    private JScrollPane scrollPane;
+    private final JLabel errorText = new JLabel("");
+    private final JButton addButton = new JButton("Aanpassen");
+    private final JPanel scrollFrame = new JPanel();
 
-    private JButton cancelButton = new JButton("Sluiten");
+    private final JButton cancelButton = new JButton("Sluiten");
 
     public StockUpdateDialog(JFrame frame, boolean modal, DatabaseManager databaseManager) {
         super(frame, modal);
@@ -41,6 +35,7 @@ public class StockUpdateDialog extends JDialog implements ActionListener {
         setLayout(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        JLabel removeLabel = new JLabel("Producten verwijderen uit stelling");
         removeLabel.setBounds(25, 15, 200, 25);
         add(removeLabel);
 
@@ -48,21 +43,25 @@ public class StockUpdateDialog extends JDialog implements ActionListener {
 
         refreshStockItems();
 
-        scrollPane = new JScrollPane(scrollFrame);
+        JScrollPane scrollPane = new JScrollPane(scrollFrame);
         scrollPane.setBounds(25, 50, 950, 350);
         add(scrollPane);
+        JLabel addLabel = new JLabel("Vak aanvullen/wijzigen");
         addLabel.setBounds(1000, 15, 200, 25);
         add(addLabel);
+        JLabel addTextLabel = new JLabel("Product ID:");
         addTextLabel.setBounds(1000, 50, 90, 25);
         add(addTextLabel);
         addText.setBounds(1085, 50, 115, 25);
         add(addText);
         addButton.setBounds(1000, 185, 200, 25);
         add(addButton);
+        JLabel addXLabel = new JLabel("X-coördinaat:");
         addXLabel.setBounds(1000, 100, 90, 25);
         add(addXLabel);
         addXText.setBounds(1085, 100, 115, 25);
         add(addXText);
+        JLabel addYLabel = new JLabel("Y-coördinaat:");
         addYLabel.setBounds(1000, 150, 125, 25);
         add(addYLabel);
         addYText.setBounds(1085, 150, 115, 25);
@@ -95,18 +94,18 @@ public class StockUpdateDialog extends JDialog implements ActionListener {
             gbc.anchor = GridBagConstraints.WEST;
             gbc.insets = new Insets(0, 5, 0, 5);
 
-            String itemName = databaseManager.getProductName(item.getStockItemID());
+            String itemName = databaseManager.getProductName(item.stockItemID());
             JLabel label;
-            if(item.getStockItemID() == 0){
-                label = new JLabel("Vak (" + item.getX() + "," + item.getY() + ") | LEEG");
+            if(item.stockItemID() == 0){
+                label = new JLabel("Vak (" + item.x() + "," + item.y() + ") | LEEG");
             } else {
-                label = new JLabel("Vak (" + item.getX() + "," + item.getY() + ") - Product " + item.getStockItemID() + " | " + itemName);
+                label = new JLabel("Vak (" + item.x() + "," + item.y() + ") - Product " + item.stockItemID() + " | " + itemName);
                 removeableItems.add(item);
             }
             label.setHorizontalAlignment(SwingConstants.LEFT);
             scrollFrame.add(label, gbc);
             gbc.anchor = GridBagConstraints.EAST;
-            if(item.getStockItemID() != 0){
+            if(item.stockItemID() != 0){
                 JButton button = new JButton("Verwijder");
                 button.setHorizontalAlignment(SwingConstants.RIGHT);
                 buttonArray.add(button);
@@ -150,7 +149,7 @@ public class StockUpdateDialog extends JDialog implements ActionListener {
             for (int i = 0; i < buttonArray.size(); i++) {
                 if (e.getSource().equals(buttonArray.get(i))) {
                     StockItem item = removeableItems.get(i);
-                    databaseManager.removeItemFromStock(item.getStockItemID());
+                    databaseManager.removeItemFromStock(item.stockItemID());
                     refreshStockItems();
                     break;
                 }

@@ -11,7 +11,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class SerialManager implements SerialPortDataListener {
     private final SerialPort comPort;
     private final StringBuilder messageBuffer = new StringBuilder();
-    private GUI gui;
+    private final GUI gui;
 
     public SerialManager(SerialPort comPort, GUI gui) {
         this.comPort = comPort;

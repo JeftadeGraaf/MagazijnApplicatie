@@ -11,17 +11,16 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class OrderAddDialog extends JDialog implements ActionListener {
-    private ArrayList<JPanel> productPanels = new ArrayList<>();
-    private ArrayList<JButton> productButtons = new ArrayList<>();
-    private ArrayList<Integer> productIds = new ArrayList<>();
-    private JTextField stockItemIdText = new JTextField();
-    private Border blackLine = BorderFactory.createLineBorder(Color.black);
-    private JPanel productsPanel = new JPanel();
-    private JScrollPane productsScrollPane = new JScrollPane(productsPanel);
-    private JTextField customerIdText = new JTextField();
+    private final ArrayList<JPanel> productPanels = new ArrayList<>();
+    private final ArrayList<JButton> productButtons = new ArrayList<>();
+    private final ArrayList<Integer> productIds = new ArrayList<>();
+    private final JTextField stockItemIdText = new JTextField();
+    private final Border blackLine = BorderFactory.createLineBorder(Color.black);
+    private final JPanel productsPanel = new JPanel();
+    private final JTextField customerIdText = new JTextField();
     private Integer orderId = 0;
-    private JLabel errorText = new JLabel("");
-    private DatabaseManager databaseManager;
+    private final JLabel errorText = new JLabel("");
+    private final DatabaseManager databaseManager;
 
     public OrderAddDialog(JFrame jframe, boolean modal, DatabaseManager databaseManager){
         super(jframe, modal);
@@ -65,6 +64,7 @@ public class OrderAddDialog extends JDialog implements ActionListener {
         productsPanel.setBorder(blackLine);
         productsPanel.setLayout(new GridLayout(0, 1));
 
+        JScrollPane productsScrollPane = new JScrollPane(productsPanel);
         productsScrollPane.setBounds(198, 20, 390, 132);
         add(productsScrollPane);
 
@@ -98,10 +98,10 @@ public class OrderAddDialog extends JDialog implements ActionListener {
             try {
                 int customerId = Integer.parseInt(stockItemIdText.getText());
                 orderId = databaseManager.addNewOrder(customerId);
-                for (int i = 0; i < productIds.size(); i++) {
-                    databaseManager.addProductToOrder(orderId, productIds.get(i));
+                for (Integer productId : productIds) {
+                    databaseManager.addProductToOrder(orderId, productId);
                 }
-                hide();
+                dispose();
             } catch (NumberFormatException ex) {
                 errorText.setText("alleen nummers toegestaan");
             }
@@ -113,7 +113,6 @@ public class OrderAddDialog extends JDialog implements ActionListener {
     public void stockItemIdClicked(ActionEvent e){
         try{
             Integer id = Integer.valueOf(stockItemIdText.getText());
-            int size = productButtons.size();
             JPanel productPanel = new JPanel();
             productPanels.add(productPanel);
             productPanel.setBorder(blackLine);

@@ -11,7 +11,7 @@ public class BestFitDecreasing {
     public static ArrayList<Box> calculateBPP(ArrayList<StockItem> productList, int capacity){
 
         // Sort items in decreasing order of their weights
-        productList.sort(Comparator.comparingInt(StockItem::getWeight).reversed());
+        productList.sort(Comparator.comparingInt(StockItem::weight).reversed());
 
         ArrayList<Box> boxList = new ArrayList<>();
 
@@ -21,7 +21,7 @@ public class BestFitDecreasing {
             int minRemainingCapacity = Integer.MAX_VALUE;
             for (Box box : boxList) {
                 int remainingCapacity = box.getRemainingCapacity();
-                if (remainingCapacity >= item.getWeight() && remainingCapacity < minRemainingCapacity) {
+                if (remainingCapacity >= item.weight() && remainingCapacity < minRemainingCapacity) {
                     bestBox = box;
                     minRemainingCapacity = remainingCapacity;
                 }
@@ -35,13 +35,6 @@ public class BestFitDecreasing {
 
             // Add the item to the best bin
             bestBox.addItem(item);
-        }
-
-        // Print the bins and their contents
-        for (int i = 0; i < boxList.size(); i++) {
-            for (int j = 0; j < boxList.get(i).getProductlist().size(); j++) {
-                int itemId = boxList.get(i).getProductlist().get(j).getStockItemID();
-            }
         }
         return boxList;
     }
