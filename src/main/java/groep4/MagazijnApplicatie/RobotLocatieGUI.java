@@ -8,14 +8,8 @@ import java.util.ArrayList;
 
 public class RobotLocatieGUI extends JPanel{
 
-    private JLabel toFetchLabel;
-    private JLabel fetchedLabel;
-    private JLabel robotLabel;
-
-    private int cellSize;
-
-
-    private GUI gui;
+    private final int cellSize;
+    private final GUI gui;
 
     public RobotLocatieGUI(GUI gui){
         this.gui = gui;
@@ -26,9 +20,9 @@ public class RobotLocatieGUI extends JPanel{
         setLayout(null);
 
         //Label instantiating
-        fetchedLabel = new JLabel("Opgehaald product");
-        toFetchLabel = new JLabel("Op te halen product");
-        robotLabel = new JLabel("Locatie robot");
+        JLabel fetchedLabel = new JLabel("Opgehaald product");
+        JLabel toFetchLabel = new JLabel("Op te halen product");
+        JLabel robotLabel = new JLabel("Locatie robot");
         fetchedLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
         toFetchLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
         robotLabel.setFont(new Font("Calibri", Font.PLAIN, 20));
@@ -54,20 +48,20 @@ public class RobotLocatieGUI extends JPanel{
         drawRackGrid(g);
         ArrayList<OrderLine> orderLines = gui.getOrderLines();
 
-        if(orderLines.size() > 0 && orderLines.get(0).getOrderID() != -1){
-            //Drawing the ID's of the items in an order at their location in the warehouse rack
-            for (int i = 0; i < orderLines.size(); i++) {
-                int x = orderLines.get(i).getStockItem().getX();
-                int y = orderLines.get(i).getStockItem().getY();
-                if(x > 0 && y > 0){
-                    int xIcon = 340 - ((x-1) * 65);
-                    int yIcon = 295 - ((y-1) * 65);
-                    int xLabel = 295 - ((x-1) * 65);
-                    int yLabel = 305 - ((y-1) * 65);
+        if(!orderLines.isEmpty() && orderLines.getFirst().orderID() != -1){
+            //Drawing the ID's of items in an order at the location in the warehouse rack
+            for (OrderLine orderLine : orderLines) {
+                int x = orderLine.stockItem().x();
+                int y = orderLine.stockItem().y();
+                if (x > 0 && y > 0) {
+                    int xIcon = 340 - ((x - 1) * 65);
+                    int yIcon = 295 - ((y - 1) * 65);
+                    int xLabel = 295 - ((x - 1) * 65);
+                    int yLabel = 305 - ((y - 1) * 65);
                     drawPackageIcon(g, Color.red, xIcon, yIcon);
                     g.setColor(Color.black);
                     g.setFont(new Font("Calibri", Font.PLAIN, 20));
-                    g.drawString(String.valueOf(orderLines.get(i).getStockItem().getStockItemID()), xLabel,yLabel);
+                    g.drawString(String.valueOf(orderLine.stockItem().stockItemID()), xLabel, yLabel);
                 }
             }
             //Drawing the route the robot will take

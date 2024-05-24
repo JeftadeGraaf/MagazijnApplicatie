@@ -1,6 +1,5 @@
 package groep4.MagazijnApplicatie.database;
 
-import com.mysql.cj.protocol.Resultset;
 import groep4.MagazijnApplicatie.entity.OrderLine;
 import groep4.MagazijnApplicatie.entity.StockItem;
 
@@ -9,35 +8,33 @@ import java.util.ArrayList;
 
 public class DatabaseManager {
 
-    private String url = "jdbc:mysql://localhost/nerdygadgets";
-    private String username = "root", password = "";
-
-    private Connection connection;
+    private final Connection connection;
 
     public DatabaseManager() throws SQLException {
-        connection = DriverManager.getConnection(this.url, this.username, this.password);
+        String url = "jdbc:mysql://localhost/nerdygadgets";
+        String username = "root";
+        String password = "";
+        connection = DriverManager.getConnection(url, username, password);
 
     }
 
     public ArrayList<OrderLine> getOrderLines(int orderId) {
         try {
             // Language=MySQL
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `orderlines` where OrderID = ?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `orderLines` where OrderID = ?");
             statement.setInt(1, orderId);
-            ArrayList<OrderLine> orderlines = new ArrayList<>();
+            ArrayList<OrderLine> orderLines = new ArrayList<>();
             ResultSet rs = statement.executeQuery();
 
-            for (int i = 0; rs.next(); i++) {
+            while (rs.next()) {
                 int itemID = rs.getInt("StockItemID");
                 int[] itemCoordinates = getItemRackLocation(itemID);
                 StockItem stockItem = new StockItem(rs.getInt("StockItemID"), itemCoordinates[0], itemCoordinates[1], getItemWeight(itemID));
-                OrderLine orderLine = new OrderLine();
-                orderLine.setStockItem(stockItem);
-                orderLine.setOrderID(rs.getInt("OrderID"));
-                orderlines.add(orderLine);
+                OrderLine orderLine = new OrderLine(rs.getInt("OrderID"), stockItem);
+                orderLines.add(orderLine);
             }
 
-            return orderlines;
+            return orderLines;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -116,11 +113,6 @@ public class DatabaseManager {
 
     }
 
-
-    public void closeConnection() throws SQLException {
-        connection.close();
-    }
-
     public int addNewOrder(int CustomerID){
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO orders (CustomerID, SalespersonPersonID, PickedByPersonID, ContactPersonID, BackorderOrderID, OrderDate, ExpectedDeliveryDate, CustomerPurchaseOrderNumber, IsUndersupplyBackordered, PickingCompletedWhen, LastEditedBy, LastEditedWhen) VALUES(?, 2, 3, 3032, 45, now(), now(), 12126, 1, now(), 7, now())", PreparedStatement.RETURN_GENERATED_KEYS);
@@ -142,16 +134,17 @@ public class DatabaseManager {
     public String[] getPackageInfo(int orderId){
         String[] info = new String[5];
         try{
-            PreparedStatement statement = connection.prepareStatement("SELECT \n" +
-                    "    c.CustomerID, c.CustomerName, CONCAT(c.DeliveryAddressLine1 ,\" \",  c.DeliveryAddressLine2) AS address, o.OrderDate, o.OrderID\n" +
-                    "FROM \n" +
-                    "    orders o\n" +
-                    "JOIN \n" +
-                    "    customers c\n" +
-                    "ON \n" +
-                    "    o.CustomerID = c.CustomerID\n" +
-                    "WHERE \n" +
-                    "    o.OrderID = ?;");
+            PreparedStatement statement = connection.prepareStatement("""
+                    SELECT\s
+                        c.CustomerID, c.CustomerName, CONCAT(c.DeliveryAddressLine1 ," ",  c.DeliveryAddressLine2) AS address, o.OrderDate, o.OrderID
+                    FROM\s
+                        orders o
+                    JOIN\s
+                        customers c
+                    ON\s
+                        o.CustomerID = c.CustomerID
+                    WHERE\s
+                        o.OrderID = ?;""");
             statement.setInt(1, orderId);
 
             ResultSet rs = statement.executeQuery();
@@ -177,12 +170,12 @@ public class DatabaseManager {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM `warehouse_rack`");
             ResultSet rs = statement.executeQuery();
             ArrayList<StockItem> itemList = new ArrayList<>();
-            for (int i = 0; rs.next(); i++) {
+            while (rs.next()) {
                 int itemID = rs.getInt("itemID");
-                int xCoord = rs.getInt("locationX");
-                int yCoord = rs.getInt("locationY");
+                int xCoordinate = rs.getInt("locationX");
+                int yCoordinate = rs.getInt("locationY");
                 int itemWeight = getItemWeight(itemID);
-                itemList.add(new StockItem(itemID, xCoord, yCoord, itemWeight));
+                itemList.add(new StockItem(itemID, xCoordinate, yCoordinate, itemWeight));
             }
             return itemList;
         } catch (SQLException e) {
@@ -190,7 +183,7 @@ public class DatabaseManager {
         }
     }
 
-    public boolean updateRackCell(int itemID, int x, int y){
+    public void updateRackCell(int itemID, int x, int y){
         try {
             // Language=MySQL
             PreparedStatement statement = connection.prepareStatement("UPDATE `warehouse_rack` SET `itemID` = ? WHERE locationX = ? AND locationY = ?");
@@ -198,21 +191,17 @@ public class DatabaseManager {
             statement.setInt(2, x);
             statement.setInt(3, y);
             statement.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            return false;
+        } catch (SQLException ignored) {
         }
     }
 
-    public boolean removeItemFromStock(int itemID){
+    public void removeItemFromStock(int itemID){
         try {
             // Language=MySQL
             PreparedStatement statement = connection.prepareStatement("UPDATE `warehouse_rack` SET `itemID` = null WHERE `itemID` = ?");
             statement.setInt(1, itemID);
             statement.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            return false;
+        } catch (SQLException ignored) {
         }
     }
 }

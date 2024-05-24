@@ -5,33 +5,30 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class OrderIDInvullenDialog extends JDialog implements ActionListener {
-    private JButton okButton;
-    private JButton annuleren;
-    private JLabel LabelOrderID;
-    private JTextField OrderIDTekstveld;
+    private final JButton okButton;
+    private final JButton annuleren;
+    private final JTextField OrderIDTekstveld;
 
     private int orderID = -1;
-    private GUI gui;
 
-    public OrderIDInvullenDialog(JFrame frame, boolean modaal, GUI gui){
+    public OrderIDInvullenDialog(JFrame frame, boolean modaal){
         super(frame,modaal);
-        this.gui = gui;
         setSize(310,135);
         setResizable(false);
         setTitle("Order");
         setLayout(null);
 
         OrderIDTekstveld = new JTextField("", 8);
-        LabelOrderID = new JLabel("Vul in orderID:");
+        JLabel labelOrderID = new JLabel("Vul in orderID:");
         annuleren = new JButton("Annuleren");
         okButton = new JButton("OK");
 
-        add(LabelOrderID);
+        add(labelOrderID);
         add(OrderIDTekstveld);
         add(annuleren);
         add(okButton);
 
-        LabelOrderID.setBounds(25, 20, 120, 25);
+        labelOrderID.setBounds(25, 20, 120, 25);
         OrderIDTekstveld.setBounds(155, 20, 120, 25);
         annuleren.setBounds(25, 60, 120, 25);
         okButton.setBounds(155, 60, 120, 25);

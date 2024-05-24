@@ -1,6 +1,5 @@
 package groep4.MagazijnApplicatie;
 
-import com.mysql.cj.x.protobuf.MysqlxCrud;
 import groep4.MagazijnApplicatie.database.DatabaseManager;
 import groep4.MagazijnApplicatie.entity.OrderLine;
 import groep4.MagazijnApplicatie.entity.Box;
@@ -8,15 +7,14 @@ import groep4.MagazijnApplicatie.entity.StockItem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class OrderBijhouderPanel extends JPanel {
 
 
-    private GUI gui;
+    private final GUI gui;
 
-    private DatabaseManager databaseManager;
+    private final DatabaseManager databaseManager;
 
     public OrderBijhouderPanel(GUI gui, DatabaseManager databaseManager){
         this.gui = gui;
@@ -33,12 +31,16 @@ public class OrderBijhouderPanel extends JPanel {
         Font italicFont = new Font("arial", Font.ITALIC, 14);
         Font defaultFont = new Font("arial", Font.PLAIN, 12);
         ArrayList<OrderLine> orderLines = gui.getOrderLines();
-        if (orderLines == null || orderLines.isEmpty()) {
+        System.out.println("PANEL:");
+        for (OrderLine orderLine : orderLines){
+            System.out.println(orderLine.stockItem().stockItemID());
+        }
+        if (orderLines.isEmpty()) {
             return;
         }
         int x = 20;
         int y = 20;
-        if (orderLines.getFirst().getOrderID() == -1) {
+        if (orderLines.getFirst().orderID() == -1) {
             g.drawString("Momenteel geen ingeladen order gevonden.", x, y);
             return;
         }
@@ -50,7 +52,7 @@ public class OrderBijhouderPanel extends JPanel {
         ArrayList<StockItem> itemsInOrder = new ArrayList<>();
 
         for (OrderLine orderLine :orderLines){
-            itemsInOrder.add(orderLine.getStockItem());
+            itemsInOrder.add(orderLine.stockItem());
         }
 
         ArrayList<Box> boxList = BestFitDecreasing.calculateBPP(itemsInOrder, 6);
@@ -61,14 +63,14 @@ public class OrderBijhouderPanel extends JPanel {
             y+= 20;
             g.setFont(defaultFont);
             ArrayList<StockItem> itemsInBox = boxList.get(i).getProductlist();
-            for (int j = 0; j < itemsInBox.size(); j++) {
-                String itemName = databaseManager.getProductName(itemsInBox.get(j).getStockItemID());
-                if(itemsInBox.get(j).getX() == 0){
+            for (StockItem inBox : itemsInBox) {
+                String itemName = databaseManager.getProductName(inBox.stockItemID());
+                if (inBox.x() == 0) {
                     g.setColor(Color.red);
-                    g.drawString(" ID " + itemsInBox.get(j).getStockItemID() + " | " + itemName + " | NIET IN STELLING", x, y);
+                    g.drawString(" ID " + inBox.stockItemID() + " | " + itemName + " | NIET IN STELLING", x, y);
                 } else {
                     g.setColor(Color.black);
-                    g.drawString(" ID " + itemsInBox.get(j).getStockItemID() + " | " + itemName + " | Vak (" + itemsInBox.get(j).getX() + "," + itemsInBox.get(j).getY() + ")", x, y);
+                    g.drawString(" ID " + inBox.stockItemID() + " | " + itemName + " | Vak (" + inBox.x() + "," + inBox.y() + ")", x, y);
                 }
                 g.setColor(Color.black);
                 y += 20;

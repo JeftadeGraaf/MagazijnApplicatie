@@ -16,14 +16,14 @@ import java.util.stream.Stream;
 
 public class PDFFactory {
     private final Box products;
-    private String customerId;
-    private String name;
-    private String address;
-    private String sendDate;
-    private String orderId;
-    private DatabaseManager databaseManager;
-    private int currentBoxNumber;
-    private int maxBoxNumber;
+    private final String customerId;
+    private final String name;
+    private final String address;
+    private final String sendDate;
+    private final String orderId;
+    private final DatabaseManager databaseManager;
+    private final int currentBoxNumber;
+    private final int maxBoxNumber;
 
     public PDFFactory(Box products, String customerId, String name, String address, String sendDate, String orderId, DatabaseManager databaseManager, int currentBoxNumber, int maxBoxNumber) {
         this.products = products;
@@ -40,6 +40,7 @@ public class PDFFactory {
         try {
             File file = new File(System.getProperty("user.dir") + "/pakbonnen/");
             if (!file.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 file.mkdirs();
             }
             PdfWriter.getInstance(document, new FileOutputStream(System.getProperty("user.dir") + "/pakbonnen/" + orderId + "(" + currentBoxNumber + "," + maxBoxNumber + ").pdf"));
@@ -160,28 +161,18 @@ public class PDFFactory {
     }
 
     private void addRows(PdfPTable table) {
-        /*
-        for (Box product : products) {
-            for (String s : product) {
-                PdfPCell cell = new PdfPCell(new Phrase(s));
-                cell.setBorderWidth(0);
-                cell.setPaddingBottom(5);
-                table.addCell(cell);
-            }
-        } */
-
         for (int i = 0; i < products.getProductlist().size(); i++) {
             PdfPCell cell = new PdfPCell(new Phrase("1"));
             cell.setBorderWidth(0);
             cell.setPaddingBottom(5);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(String.valueOf(products.getProductlist().get(i).getStockItemID())));
+            cell = new PdfPCell(new Phrase(String.valueOf(products.getProductlist().get(i).stockItemID())));
             cell.setBorderWidth(0);
             cell.setPaddingBottom(5);
             table.addCell(cell);
 
-            cell = new PdfPCell(new Phrase(databaseManager.getProductName(products.getProductlist().get(i).getStockItemID())));
+            cell = new PdfPCell(new Phrase(databaseManager.getProductName(products.getProductlist().get(i).stockItemID())));
             cell.setBorderWidth(0);
             cell.setPaddingBottom(5);
             table.addCell(cell);

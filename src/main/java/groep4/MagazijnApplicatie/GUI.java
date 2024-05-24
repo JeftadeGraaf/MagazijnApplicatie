@@ -1,10 +1,10 @@
 package groep4.MagazijnApplicatie;
 
+import groep4.MagazijnApplicatie.entity.Box;
+import groep4.MagazijnApplicatie.entity.StockItem;
 import com.fazecast.jSerialComm.SerialPort;
 import groep4.MagazijnApplicatie.database.DatabaseManager;
-import groep4.MagazijnApplicatie.entity.Box;
 import groep4.MagazijnApplicatie.entity.OrderLine;
-import groep4.MagazijnApplicatie.entity.StockItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,12 +12,9 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 public class GUI extends JFrame {
-    private JButton orderInladen;
-    private JButton orderAanmaken;
-    private JButton orderAanpassen;
-    private JButton orderVerwerken;
-    private JButton voorraadBeheer;
-    private JLabel status;
+    private final JButton orderAanpassen;
+    private final JButton orderVerwerken;
+    private final JLabel status;
 
     private int loadedOrderID = -1;
     private Color statusColor = Color.red;
@@ -41,10 +38,10 @@ public class GUI extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         orderAanpassen = new JButton("Order aanpassen");
-        orderAanmaken = new JButton("Order aanmaken");
-        orderInladen= new JButton("Order inladen");
+        JButton orderAanmaken = new JButton("Order aanmaken");
+        JButton orderInladen = new JButton("Order inladen");
         orderVerwerken = new JButton("Order verwerken");
-        voorraadBeheer = new JButton("Voorraadbeheer");
+        JButton voorraadBeheer = new JButton("Voorraadbeheer");
         status = new JLabel("STATUS: Handmatig");
         orderBijhouder = new OrderBijhouderPanel(this, databaseManager);
 
@@ -94,12 +91,11 @@ public class GUI extends JFrame {
 
 
     public void clickedOrderLoad(ActionEvent e){
-        OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true, this);
+        OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
         loadedOrderID = order.getOrderID();
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         if (orderLines.isEmpty()) {
-            OrderLine or = new OrderLine();
-            or.setOrderID(-1);
+            OrderLine or = new OrderLine(-1, new StockItem(-1, -1, -1, -1));
             orderLines.clear();
             orderLines.add(or);
             orderAanpassen.setEnabled(false);
@@ -108,7 +104,10 @@ public class GUI extends JFrame {
             orderVerwerken.setEnabled(true);
             orderAanpassen.setEnabled(true);
         }
-
+        System.out.println("GUI:");
+        for (OrderLine orderLine : orderLines){
+            System.out.println(orderLine.stockItem().stockItemID());
+        }
         robotLocatie.repaint();
         orderBijhouder.repaint();
     }
@@ -116,7 +115,7 @@ public class GUI extends JFrame {
     public void clickedOrderChange(ActionEvent e){
         if(loadedOrderID != 0){
             orderLines = databaseManager.getOrderLines(loadedOrderID);
-            new updateOrderDialog(this, true, loadedOrderID, orderLines, databaseManager);
+            new OrderUpdateDialog(this, true, loadedOrderID, orderLines, databaseManager);
         }
         robotLocatie.repaint();
         orderBijhouder.repaint();
@@ -133,20 +132,20 @@ public class GUI extends JFrame {
     public void clickedOrderProcess(ActionEvent e) {
         ArrayList<StockItem> productList = new ArrayList<>();
         for (OrderLine orderLine : orderLines) {
-            productList.add(orderLine.getStockItem());
+            productList.add(orderLine.stockItem());
         }
         String[] info = databaseManager.getPackageInfo(loadedOrderID);
 
         ArrayList<Box> calculatedBoxes = BestFitDecreasing.calculateBPP(productList, 6);
 
         for (int i = 0; i < calculatedBoxes.size(); i++) {
-            PDFFactory pdfFactory = new PDFFactory(calculatedBoxes.get(i), info[0], info[1], info[2], info[3], info[4], databaseManager, i + 1, calculatedBoxes.size());
+            new PDFFactory(calculatedBoxes.get(i), info[0], info[1], info[2], info[3], info[4], databaseManager, i + 1, calculatedBoxes.size());
         }
         serialManager.sendMessage(tspRoute);
     }
 
     public void clickedManageStock(ActionEvent e){
-        StockUpdateDialog stockUpdateDialog = new StockUpdateDialog(this, true, databaseManager);
+        new StockUpdateDialog(this, true, databaseManager);
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         robotLocatie.repaint();
         orderBijhouder.repaint();
