@@ -22,7 +22,7 @@ public class OrderAddDialog extends JDialog implements ActionListener {
     private final JLabel errorText = new JLabel("");
     private final DatabaseManager databaseManager;
 
-    public OrderAddDialog(JFrame jframe, boolean modal, DatabaseManager databaseManager){
+    public OrderAddDialog(JFrame jframe, boolean modal, DatabaseManager databaseManager, int loadedOrderID){
         super(jframe, modal);
         this.databaseManager = databaseManager;
         setSize(620, 250);
@@ -82,7 +82,9 @@ public class OrderAddDialog extends JDialog implements ActionListener {
 
         add(errorText);
 
-
+        if(orderId == 0){
+            orderId = loadedOrderID;
+        }
         setVisible(true);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
     }
@@ -114,6 +116,7 @@ public class OrderAddDialog extends JDialog implements ActionListener {
         try{
             Integer id = Integer.valueOf(stockItemIdText.getText());
             JPanel productPanel = new JPanel();
+            productPanel.setLayout(new BorderLayout());
             productPanels.add(productPanel);
             productPanel.setBorder(blackLine);
             productsPanel.add(productPanel);
@@ -126,7 +129,7 @@ public class OrderAddDialog extends JDialog implements ActionListener {
             trashCanButton.setBounds(200, 0, 30, 30);
             trashCanButton.setFont(new Font("monospace", Font.PLAIN, 25));
             trashCanButton.addActionListener(this);
-            productPanel.add(trashCanButton);
+            productPanel.add(trashCanButton, BorderLayout.EAST);
             productButtons.add(trashCanButton);
             productIds.add(id);
 

@@ -77,6 +77,8 @@ public class OrderBijhouderPanel extends JPanel {
             }
             y += 10;
         }
-        g.drawString(TSPBruteForce.getRoute(orderLines), x, y);
+        String tspRoute = TSPBruteForce.getRoute(orderLines);
+        gui.setTSPRoute(tspRoute);
+        g.drawString(tspRoute, x, y);
     }
 }

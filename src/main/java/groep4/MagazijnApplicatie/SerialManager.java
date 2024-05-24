@@ -13,14 +13,20 @@ public class SerialManager implements SerialPortDataListener {
     private final StringBuilder messageBuffer = new StringBuilder();
     private final GUI gui;
 
-    public SerialManager(SerialPort comPort, GUI gui) {
-        this.comPort = comPort;
+    public SerialManager(GUI gui, SerialPort comPort) {
         this.gui = gui;
+        this.comPort = comPort;
+        this.comPort.setBaudRate(9600);
+        this.comPort.openPort();
+        this.comPort.addDataListener(this);
     }
 
     public SerialManager(GUI gui){
         this.gui = gui;
         this.comPort = SerialPort.getCommPorts()[0];
+        this.comPort.setBaudRate(9600);
+        this.comPort.openPort();
+        this.comPort.addDataListener(this);
     }
 
     @Override
@@ -42,18 +48,20 @@ public class SerialManager implements SerialPortDataListener {
             messageBuffer.append(new String(newData, 0, numRead, UTF_8));
 
             // Check for complete messages (ending with '\n')
-            String[] messages = messageBuffer.toString().split("\n");
-            if (messages.length > 1) {
+            String bufferString = messageBuffer.toString();
+            int lastIndex = bufferString.lastIndexOf('\n');
+            if (lastIndex != -1) {
+                String completeMessages = bufferString.substring(0, lastIndex);
+                messageBuffer.delete(0, lastIndex + 1);
+
                 // Process each complete message
-                for (int i = 0; i < messages.length - 1; i++) {
-                    String message = messages[i];
+                String[] messages = completeMessages.split("\n");
+                for (String message : messages) {
                     System.out.println(message);
-                    System.out.println(message);
-                    char testChar = messages[i].charAt(0);
+                    char testChar = message.charAt(0);
                     switch (testChar) {
                         case 's':
-                            sendMessage("bs");
-                            switch (messages[i].charAt(1)){
+                            switch (message.charAt(1)) {
                                 case 'g':
                                     gui.changeStatus("automatisch", Color.green);
                                     break;
@@ -64,7 +72,7 @@ public class SerialManager implements SerialPortDataListener {
                                     gui.changeStatus("handmatig", Color.orange);
                                     break;
                                 case 'b':
-                                    gui.changeStatus("calibratie", Color.blue);
+                                    gui.changeStatus("kalibratie", Color.blue);
                                     break;
                                 default:
                                     break;
@@ -75,18 +83,17 @@ public class SerialManager implements SerialPortDataListener {
                             String[] location = message.split(",");
                             gui.setRobotXCoordinate(Integer.parseInt(location[0]));
                             gui.setRobotYCoordinate(Integer.parseInt(location[1]));
+                            break;
                         default:
                             break;
                     }
                 }
-                // Reset buffer with any remaining incomplete message
-                messageBuffer.setLength(0);
-                messageBuffer.append(messages[messages.length - 1]);
             }
         }
     }
 
     public void sendMessage(String message) {
+        System.out.println("Sending message: " + message);
         comPort.writeBytes(message.getBytes(), message.length());
     }
 }

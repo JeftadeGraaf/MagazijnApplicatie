@@ -5,6 +5,7 @@ import groep4.MagazijnApplicatie.entity.OrderLine;
 import groep4.MagazijnApplicatie.entity.StockItem;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +23,8 @@ public class OrderUpdateDialog extends JDialog implements ActionListener {
     private final JTextField addText = new JTextField("");
     private final JButton addButton = new JButton("Toevoegen aan order");
     private final JPanel scrollFrame = new JPanel();
+    private Border blackLine = BorderFactory.createLineBorder(Color.black);
+    private JScrollPane scrollPane;
 
     private final JButton cancelButton = new JButton("Ok");
 
@@ -31,7 +34,7 @@ public class OrderUpdateDialog extends JDialog implements ActionListener {
         this.orderLines = orderLines;
         this.databaseManager = databaseManager;
         setTitle("Order aanpassen: " + orderID);
-        setSize(500, 300);
+        setSize(800, 300);
         setResizable(false);
         setLayout(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -45,24 +48,24 @@ public class OrderUpdateDialog extends JDialog implements ActionListener {
     }
 
     private void initializeComponents() {
-        removeLabel.setBounds(25, 15, 200, 25);
+        removeLabel.setBounds(250, 15, 200, 25);
         add(removeLabel);
 
-        scrollFrame.setLayout(new GridLayout(0, 2));
+        scrollFrame.setLayout(new GridLayout(0, 1));
 
-        JScrollPane scrollPane = new JScrollPane(scrollFrame);
-        scrollPane.setBounds(25, 50, 200, 175);
+        scrollPane = new JScrollPane(scrollFrame);
+        scrollPane.setBounds(250, 50, 500, 175);
         add(scrollPane);
 
-        addLabel.setBounds(250, 15, 200, 25);
+        addLabel.setBounds(25, 15, 200, 25);
         add(addLabel);
-        addTextLabel.setBounds(250, 50, 90, 25);
+        addTextLabel.setBounds(25, 50, 90, 25);
         add(addTextLabel);
-        addText.setBounds(325, 50, 125, 25);
+        addText.setBounds(100, 50, 125, 25);
         add(addText);
-        addButton.setBounds(250, 85, 200, 25);
+        addButton.setBounds(25, 85, 200, 25);
         add(addButton);
-        cancelButton.setBounds(350, 200, 100, 25);
+        cancelButton.setBounds(650, 230, 100, 25);
         add(cancelButton);
 
         cancelButton.addActionListener(this);
@@ -74,13 +77,29 @@ public class OrderUpdateDialog extends JDialog implements ActionListener {
 
     private void initializeOrderLines() {
         for (OrderLine orderLine : orderLines) {
-            databaseManager.getProductName(orderLine.getStockItem().stockItemID());
-            scrollFrame.add(new JLabel("Product " + orderLine.getStockItem().stockItemID()));
-            JButton button = new JButton("Verwijder");
-            buttonArray.add(button);
-            scrollFrame.add(button);
-            button.addActionListener(this);
+            int itemID = orderLine.getStockItem().getStockItemID();
+            JPanel productPanel = new JPanel();
+            productPanel.setLayout(new BorderLayout());
+            scrollFrame.add(productPanel);
+            productPanel.setBorder(blackLine);
+            scrollFrame.add(productPanel);
+
+            String itemName = databaseManager.getProductName(itemID);
+            JLabel productLabel = new JLabel(itemID + " :  " + itemName);
+            productPanel.add(productLabel);
+
+            JButton trashCanButton = new JButton("\uD83D\uDDD1");
+            trashCanButton.setBounds(200, 0, 30, 30);
+            trashCanButton.setFont(new Font("monospace", Font.PLAIN, 25));
+            trashCanButton.addActionListener(this);
+            productPanel.add(trashCanButton, BorderLayout.EAST);
+            buttonArray.add(trashCanButton);
+
+
+
         }
+        scrollFrame.repaint();
+        scrollFrame.revalidate();
     }
 
     @Override
@@ -97,6 +116,8 @@ public class OrderUpdateDialog extends JDialog implements ActionListener {
                 orderLine.setStockItem(new StockItem(itemID, itemCoordinates[0], itemCoordinates[1], databaseManager.getItemWeight(itemID)));
                 orderLines.add(orderLine);
 
+                /*
+
                 JLabel itemLabel = new JLabel("Product " + itemID);
                 scrollFrame.add(itemLabel);
                 JButton removeButton = new JButton("Verwijder");
@@ -107,6 +128,28 @@ public class OrderUpdateDialog extends JDialog implements ActionListener {
 
                 scrollFrame.revalidate();
                 scrollFrame.repaint();
+                               */
+
+                JPanel productPanel = new JPanel();
+                productPanel.setLayout(new BorderLayout());
+                scrollFrame.add(productPanel);
+                productPanel.setBorder(blackLine);
+                scrollFrame.add(productPanel);
+
+                String itemName = databaseManager.getProductName(itemID);
+                JLabel productLabel = new JLabel(itemID + " :  " + itemName);
+                productPanel.add(productLabel);
+
+                JButton trashCanButton = new JButton("\uD83D\uDDD1");
+                trashCanButton.setBounds(200, 0, 30, 30);
+                trashCanButton.setFont(new Font("monospace", Font.PLAIN, 25));
+                trashCanButton.addActionListener(this);
+                productPanel.add(trashCanButton, BorderLayout.EAST);
+                buttonArray.add(trashCanButton);
+
+
+                scrollFrame.repaint();
+                scrollFrame.revalidate();
 
                 // Clear the text field after adding the product
                 addText.setText("");
@@ -120,8 +163,7 @@ public class OrderUpdateDialog extends JDialog implements ActionListener {
                     // Updating the orderLines list
                     orderLines.remove(i);
                     // Removing the corresponding button and label
-                    scrollFrame.remove(i * 2); // Remove label
-                    scrollFrame.remove(i * 2); // Remove button (after the label is removed, the button shifts to the label's position)
+                    scrollFrame.remove(i); // Remove panel
                     // Removing the button from buttonArray
                     buttonArray.remove(i);
                     // Refreshing the panel

@@ -87,6 +87,7 @@ public class TSPBruteForce {
             StockItem stockItem = orderLines.get(product).getStockItem();
             route.add(stockItem.x() + "." + stockItem.y());
         }
+        orderLines.removeFirst();
 
         return route.toString();
     }
