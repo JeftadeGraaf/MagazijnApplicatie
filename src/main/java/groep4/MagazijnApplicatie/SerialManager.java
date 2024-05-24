@@ -81,8 +81,7 @@ public class SerialManager implements SerialPortDataListener {
                         case 'l':
                             message = message.substring(1);
                             String[] location = message.split(",");
-                            gui.setRobotXCoordinate(Integer.parseInt(location[0]));
-                            gui.setRobotYCoordinate(Integer.parseInt(location[1]));
+                            gui.getRealtimeLocation().setCoordinates(Integer.parseInt(location[0]), Integer.parseInt(location[1]));
                             break;
                         default:
                             break;

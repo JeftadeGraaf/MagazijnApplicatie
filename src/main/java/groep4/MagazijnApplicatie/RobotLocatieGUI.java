@@ -55,7 +55,7 @@ public class RobotLocatieGUI extends JPanel{
         ArrayList<OrderLine> orderLines = gui.getOrderLines();
 
         if(orderLines.size() > 0 && orderLines.get(0).getOrderID() != -1){
-            //Drawing the ID's of items in an order at the location in the warehouse rack
+            //Drawing the ID's of the items in an order at their location in the warehouse rack
             for (int i = 0; i < orderLines.size(); i++) {
                 int x = orderLines.get(i).getStockItem().getX();
                 int y = orderLines.get(i).getStockItem().getY();

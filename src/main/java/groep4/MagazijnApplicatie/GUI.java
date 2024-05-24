@@ -20,13 +20,13 @@ public class GUI extends JFrame {
     private JLabel status;
 
     private int loadedOrderID = -1;
-    private int robotXCoordinate = 0;
-    private int robotYCoordinate = 0;
     private Color statusColor = Color.red;
     private String tspRoute;
 
-    OrderBijhouderPanel orderBijhouder;
-    RobotLocatieGUI robotLocatie;
+    private OrderBijhouderPanel orderBijhouder;
+    private RobotLocatieGUI robotLocatie;
+    private RealtimeLocationPanel realtimeLocation;
+
     private DatabaseManager databaseManager;
     private SerialManager serialManager;
     private ArrayList<OrderLine> orderLines = new ArrayList<>();
@@ -54,8 +54,24 @@ public class GUI extends JFrame {
         orderAanpassen.setBounds(500,470,225,25);
         orderVerwerken.setBounds(750,470,225,25);
         voorraadBeheer.setBounds(750, 525, 225, 25);
+
+        // Create a JLayeredPane
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setBounds(25, 25, 450, 550);
+        add(layeredPane);
+
+        // Initialize robotLocatie panel
         robotLocatie = new RobotLocatieGUI(this);
-        robotLocatie.setBounds(25,25,450,550);
+        robotLocatie.setBounds(0, 0, 450, 550);
+        layeredPane.add(robotLocatie, JLayeredPane.DEFAULT_LAYER);
+
+        // Initialize realtimeLocation panel
+        realtimeLocation = new RealtimeLocationPanel();
+        realtimeLocation.setBounds(0, 0, 450, 550);
+        realtimeLocation.setOpaque(false);
+        layeredPane.add(realtimeLocation, JLayeredPane.PALETTE_LAYER);
+
+
         add(orderInladen);
         add(orderAanmaken);
         add(status);
@@ -65,7 +81,6 @@ public class GUI extends JFrame {
         orderAanpassen.setEnabled(false);
         add(orderVerwerken);
         orderVerwerken.setEnabled(false);
-        add(robotLocatie);
         status.setBounds(500,525,200,25);
         status.setFont(new Font("Calibri", Font.BOLD, 20));
         orderInladen.addActionListener(this::clickedOrderLoad);
@@ -116,15 +131,6 @@ public class GUI extends JFrame {
     }
 
     public void clickedOrderProcess(ActionEvent e) {
-        /*
-        ArrayList<String> product = new ArrayList<>();
-        product.add("5");
-        product.add("234234");
-        product.add("dit product is geweldig");
-        ArrayList<ArrayList<String>> products = new ArrayList<>();
-        products.add(product);
-        */
-
         ArrayList<StockItem> productList = new ArrayList<>();
         for (OrderLine orderLine : orderLines) {
             productList.add(orderLine.getStockItem());
@@ -153,16 +159,6 @@ public class GUI extends JFrame {
         orderBijhouder.repaint();
     }
 
-    public void setRobotXCoordinate(int xCoordinate){
-        robotXCoordinate = xCoordinate;
-        robotLocatie.repaint();
-    }
-
-    public void setRobotYCoordinate(int yCoordinate){
-        robotYCoordinate = yCoordinate;
-        robotLocatie.repaint();
-    }
-
     public ArrayList<OrderLine> getOrderLines() {
         return orderLines;
     }
@@ -174,4 +170,10 @@ public class GUI extends JFrame {
     public void setTSPRoute(String route) {
         this.tspRoute = route;
     }
+
+    public RealtimeLocationPanel getRealtimeLocation(){
+        return realtimeLocation;
+    }
+
+
 }
