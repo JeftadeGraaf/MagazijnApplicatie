@@ -40,6 +40,7 @@ public class PDFFactory {
         try {
             File file = new File(System.getProperty("user.dir") + "/pakbonnen/");
             if (!file.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 file.mkdirs();
             }
             PdfWriter.getInstance(document, new FileOutputStream(System.getProperty("user.dir") + "/pakbonnen/" + orderId + "(" + currentBoxNumber + "," + maxBoxNumber + ").pdf"));

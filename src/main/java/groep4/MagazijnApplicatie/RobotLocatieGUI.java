@@ -48,11 +48,11 @@ public class RobotLocatieGUI extends JPanel{
         drawRackGrid(g);
         ArrayList<OrderLine> orderLines = gui.getOrderLines();
 
-        if(!orderLines.isEmpty() && orderLines.getFirst().getOrderID() != -1){
+        if(!orderLines.isEmpty() && orderLines.getFirst().orderID() != -1){
             //Drawing the ID's of items in an order at the location in the warehouse rack
             for (OrderLine orderLine : orderLines) {
-                int x = orderLine.getStockItem().x();
-                int y = orderLine.getStockItem().y();
+                int x = orderLine.stockItem().x();
+                int y = orderLine.stockItem().y();
                 if (x > 0 && y > 0) {
                     int xIcon = 340 - ((x - 1) * 65);
                     int yIcon = 295 - ((y - 1) * 65);
@@ -61,7 +61,7 @@ public class RobotLocatieGUI extends JPanel{
                     drawPackageIcon(g, Color.red, xIcon, yIcon);
                     g.setColor(Color.black);
                     g.setFont(new Font("Calibri", Font.PLAIN, 20));
-                    g.drawString(String.valueOf(orderLine.getStockItem().stockItemID()), xLabel, yLabel);
+                    g.drawString(String.valueOf(orderLine.stockItem().stockItemID()), xLabel, yLabel);
                 }
             }
             //Drawing the route the robot will take

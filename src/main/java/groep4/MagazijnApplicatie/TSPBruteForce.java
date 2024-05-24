@@ -21,10 +21,10 @@ public class TSPBruteForce {
         int size = route.size();
 
         for (int i = 0; i < size - 1; i++) {
-            totalDistance += calculateDistance(coords.get(route.get(i)).getStockItem(), coords.get(route.get(i + 1)).getStockItem());
+            totalDistance += calculateDistance(coords.get(route.get(i)).stockItem(), coords.get(route.get(i + 1)).stockItem());
         }
 
-        totalDistance += calculateDistance(coords.get(route.get(size - 1)).getStockItem(), coords.get(route.getFirst()).getStockItem());
+        totalDistance += calculateDistance(coords.get(route.get(size - 1)).stockItem(), coords.get(route.getFirst()).stockItem());
         return totalDistance;
     }
 
@@ -77,14 +77,13 @@ public class TSPBruteForce {
 
     public static String getRoute(List<OrderLine> orderLines) {
         StockItem baseItem = new StockItem(-1, 0, 0, -1);
-        OrderLine baseLine = new OrderLine();
-        baseLine.setStockItem(baseItem);
+        OrderLine baseLine = new OrderLine(-1, baseItem);
         orderLines.addFirst(baseLine);
         Pair<Double, List<Integer>> result = tspBruteForce(orderLines);
 
         StringJoiner route = new StringJoiner(",", "o", "");
         for (int product : result.second()) {
-            StockItem stockItem = orderLines.get(product).getStockItem();
+            StockItem stockItem = orderLines.get(product).stockItem();
             route.add(stockItem.x() + "." + stockItem.y());
         }
         orderLines.removeFirst();

@@ -6,13 +6,9 @@ public class Box {
     private ArrayList<StockItem> productlist;
 
     private final int capacity;
-    private int orderNumber;
-    private int customerId;
 
     public Box(ArrayList<StockItem> productlist, int capacity){
-        setCustomerId(customerId);
         setProductlist(productlist);
-        setOrderNumber(orderNumber);
         this.capacity = capacity;
     }
 
@@ -22,14 +18,6 @@ public class Box {
             totalWeight += item.weight();
         }
         return capacity - totalWeight;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public void setOrderNumber(int orderNumber) {
-        this.orderNumber = orderNumber;
     }
 
     public void setProductlist(ArrayList<StockItem> productlist) {

@@ -30,9 +30,7 @@ public class DatabaseManager {
                 int itemID = rs.getInt("StockItemID");
                 int[] itemCoordinates = getItemRackLocation(itemID);
                 StockItem stockItem = new StockItem(rs.getInt("StockItemID"), itemCoordinates[0], itemCoordinates[1], getItemWeight(itemID));
-                OrderLine orderLine = new OrderLine();
-                orderLine.setStockItem(stockItem);
-                orderLine.setOrderID(rs.getInt("OrderID"));
+                OrderLine orderLine = new OrderLine(rs.getInt("OrderID"), stockItem);
                 orderLines.add(orderLine);
             }
 

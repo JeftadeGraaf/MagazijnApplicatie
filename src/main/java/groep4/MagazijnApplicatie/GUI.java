@@ -4,9 +4,7 @@ import groep4.MagazijnApplicatie.entity.Box;
 import groep4.MagazijnApplicatie.entity.StockItem;
 import com.fazecast.jSerialComm.SerialPort;
 import groep4.MagazijnApplicatie.database.DatabaseManager;
-import groep4.MagazijnApplicatie.entity.Box;
 import groep4.MagazijnApplicatie.entity.OrderLine;
-import groep4.MagazijnApplicatie.entity.StockItem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +31,7 @@ public class GUI extends JFrame {
     public GUI(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
 
-        serialManager = new SerialManager(this);
+        //serialManager = new SerialManager(this);
         setLayout(null);
         setSize(1000, 650);
         setTitle("HMI Applicatie");
@@ -82,8 +80,7 @@ public class GUI extends JFrame {
         loadedOrderID = order.getOrderID();
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         if (orderLines.isEmpty()) {
-            OrderLine or = new OrderLine();
-            or.setOrderID(-1);
+            OrderLine or = new OrderLine(-1, new StockItem(-1, -1, -1, -1));
             orderLines.clear();
             orderLines.add(or);
             orderAanpassen.setEnabled(false);
@@ -94,7 +91,7 @@ public class GUI extends JFrame {
         }
         System.out.println("GUI:");
         for (OrderLine orderLine : orderLines){
-            System.out.println(orderLine.getStockItem().stockItemID());
+            System.out.println(orderLine.stockItem().stockItemID());
         }
         robotLocatie.repaint();
         orderBijhouder.repaint();
@@ -120,7 +117,7 @@ public class GUI extends JFrame {
     public void clickedOrderProcess(ActionEvent e) {
         ArrayList<StockItem> productList = new ArrayList<>();
         for (OrderLine orderLine : orderLines) {
-            productList.add(orderLine.getStockItem());
+            productList.add(orderLine.stockItem());
         }
         String[] info = databaseManager.getPackageInfo(loadedOrderID);
 

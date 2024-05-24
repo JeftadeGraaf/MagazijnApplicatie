@@ -33,14 +33,14 @@ public class OrderBijhouderPanel extends JPanel {
         ArrayList<OrderLine> orderLines = gui.getOrderLines();
         System.out.println("PANEL:");
         for (OrderLine orderLine : orderLines){
-            System.out.println(orderLine.getStockItem().stockItemID());
+            System.out.println(orderLine.stockItem().stockItemID());
         }
         if (orderLines.isEmpty()) {
             return;
         }
         int x = 20;
         int y = 20;
-        if (orderLines.getFirst().getOrderID() == -1) {
+        if (orderLines.getFirst().orderID() == -1) {
             g.drawString("Momenteel geen ingeladen order gevonden.", x, y);
             return;
         }
@@ -52,7 +52,7 @@ public class OrderBijhouderPanel extends JPanel {
         ArrayList<StockItem> itemsInOrder = new ArrayList<>();
 
         for (OrderLine orderLine :orderLines){
-            itemsInOrder.add(orderLine.getStockItem());
+            itemsInOrder.add(orderLine.stockItem());
         }
 
         ArrayList<Box> boxList = BestFitDecreasing.calculateBPP(itemsInOrder, 6);
