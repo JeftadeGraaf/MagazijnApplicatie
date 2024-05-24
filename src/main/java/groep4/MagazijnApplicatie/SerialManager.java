@@ -66,6 +66,9 @@ public class SerialManager implements SerialPortDataListener {
                         case 'l':
                             handleLocationMessage(message);
                             break;
+                        case 'p':
+                            handleRetrievedPackageMessage(message);
+                            break;
                         default:
                             System.out.println("Unknown message type: " + testChar);
                             break;
@@ -111,6 +114,27 @@ public class SerialManager implements SerialPortDataListener {
         } catch (NumberFormatException e) {
             e.printStackTrace();
             System.out.println("Invalid location coordinates: " + message);
+        }
+    }
+
+    private void handleRetrievedPackageMessage(String message){
+        try {
+            message = message.substring(1);
+            String[] location = message.split(",");
+            for (int i = 0; i < location.length; i++) {
+                System.out.println(location[i]);
+            }
+            if (location.length == 2) {
+                int x = Integer.parseInt(location[0]);
+                int y = Integer.parseInt(location[1].trim());
+                gui.getRealtimeLocation().addRetrievedProduct(x,y);
+                gui.getRealtimeLocation().repaint();
+            } else {
+                System.out.println("Invalid retrieved package message format: " + message);
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            System.out.println("Invalid retrieved package coordinates: " + message);
         }
     }
 

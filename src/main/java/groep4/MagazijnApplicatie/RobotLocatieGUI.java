@@ -43,7 +43,7 @@ public class RobotLocatieGUI extends JPanel{
         g.fillRect(0,400,450,150);
         g.setColor(Color.lightGray);
         g.fillRect(2,402,446,146);
-        drawPackageIconLarge(g, Color.green, 40, 440);
+        drawPackageIconLarge(g, Color.decode("#00b80f"), 40, 440);
         drawPackageIconLarge(g, Color.red, 40, 500);
         drawRackGrid(g);
         ArrayList<OrderLine> orderLines = gui.getOrderLines();
