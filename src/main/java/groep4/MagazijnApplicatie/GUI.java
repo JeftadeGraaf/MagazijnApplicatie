@@ -98,7 +98,7 @@ public class GUI extends JFrame {
     public void clickedOrderChange(ActionEvent e){
         if(loadedOrderID != 0){
             orderLines = databaseManager.getOrderLines(loadedOrderID);
-            new updateOrderDialog(this, true, loadedOrderID, orderLines, databaseManager);
+            new OrderUpdateDialog(this, true, loadedOrderID, orderLines, databaseManager);
         }
         robotLocatie.repaint();
         orderBijhouder.repaint();

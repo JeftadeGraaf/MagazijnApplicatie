@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class updateOrderDialog extends JDialog implements ActionListener {
+public class OrderUpdateDialog extends JDialog implements ActionListener {
 
     private final int orderID;
     private final ArrayList<OrderLine> orderLines;
@@ -25,7 +25,7 @@ public class updateOrderDialog extends JDialog implements ActionListener {
 
     private final JButton cancelButton = new JButton("Ok");
 
-    public updateOrderDialog(JFrame frame, boolean modal, int orderID, ArrayList<OrderLine> orderLines, DatabaseManager databaseManager) {
+    public OrderUpdateDialog(JFrame frame, boolean modal, int orderID, ArrayList<OrderLine> orderLines, DatabaseManager databaseManager) {
         super(frame, modal);
         this.orderID = orderID;
         this.orderLines = orderLines;
