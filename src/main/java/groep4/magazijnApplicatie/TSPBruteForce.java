@@ -1,7 +1,7 @@
-package groep4.MagazijnApplicatie;
+package groep4.magazijnApplicatie;
 
-import groep4.MagazijnApplicatie.entity.OrderLine;
-import groep4.MagazijnApplicatie.entity.StockItem;
+import groep4.magazijnApplicatie.entity.OrderLine;
+import groep4.magazijnApplicatie.entity.StockItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.StringJoiner;
 
 public class TSPBruteForce {
-    public TSPBruteForce() {
-    }
 
     static double calculateDistance(StockItem c1, StockItem c2) {
         return Math.hypot(c1.x() - c2.x(), c1.y() - c2.y());

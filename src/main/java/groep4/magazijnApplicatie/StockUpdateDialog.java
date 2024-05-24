@@ -1,7 +1,7 @@
-package groep4.MagazijnApplicatie;
+package groep4.magazijnApplicatie;
 
-import groep4.MagazijnApplicatie.database.DatabaseManager;
-import groep4.MagazijnApplicatie.entity.StockItem;
+import groep4.magazijnApplicatie.database.DatabaseManager;
+import groep4.magazijnApplicatie.entity.StockItem;
 
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ public class StockUpdateDialog extends JDialog implements ActionListener {
 
     private final ArrayList<JButton> buttonArray = new ArrayList<>();
     private ArrayList<StockItem> stockList = new ArrayList<>();
-    private final ArrayList<StockItem> removeableItems = new ArrayList<>();
+    private final ArrayList<StockItem> removableItems = new ArrayList<>();
     private final JTextField addText = new JTextField("");
     private final JTextField addXText = new JTextField("");
     private final JTextField addYText = new JTextField("");
@@ -80,7 +80,7 @@ public class StockUpdateDialog extends JDialog implements ActionListener {
     private void refreshStockItems() {
         scrollFrame.removeAll();
         buttonArray.clear();
-        removeableItems.clear();
+        removableItems.clear();
         stockList = databaseManager.retrieveWarehouseStock();
         int rowHeight = 0;
         GridBagConstraints gbc = new GridBagConstraints();
@@ -100,7 +100,7 @@ public class StockUpdateDialog extends JDialog implements ActionListener {
                 label = new JLabel("Vak (" + item.x() + "," + item.y() + ") | LEEG");
             } else {
                 label = new JLabel("Vak (" + item.x() + "," + item.y() + ") - Product " + item.stockItemID() + " | " + itemName);
-                removeableItems.add(item);
+                removableItems.add(item);
             }
             label.setHorizontalAlignment(SwingConstants.LEFT);
             scrollFrame.add(label, gbc);
@@ -151,7 +151,7 @@ public class StockUpdateDialog extends JDialog implements ActionListener {
         } else {
             for (int i = 0; i < buttonArray.size(); i++) {
                 if (e.getSource().equals(buttonArray.get(i))) {
-                    StockItem item = removeableItems.get(i);
+                    StockItem item = removableItems.get(i);
                     databaseManager.removeItemFromStock(item.stockItemID());
                     refreshStockItems();
                     break;

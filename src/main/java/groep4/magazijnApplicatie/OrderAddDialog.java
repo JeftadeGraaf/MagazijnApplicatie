@@ -1,6 +1,6 @@
-package groep4.MagazijnApplicatie;
+package groep4.magazijnApplicatie;
 
-import groep4.MagazijnApplicatie.database.DatabaseManager;
+import groep4.magazijnApplicatie.database.DatabaseManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -58,7 +58,7 @@ public class OrderAddDialog extends JDialog implements ActionListener {
 
         JButton stockItemIdButton = new JButton("Toevoegen");
         stockItemIdButton.setBounds(25, 50, 100, 20);
-        stockItemIdButton.addActionListener(this::stockItemIdClicked);
+        stockItemIdButton.addActionListener(e2 -> stockItemIdClicked());
         stockItemId.add(stockItemIdButton);
 
         productsPanel.setBorder(blackLine);
@@ -70,12 +70,12 @@ public class OrderAddDialog extends JDialog implements ActionListener {
 
         JButton cancelButton = new JButton("Cancel");
         cancelButton.setBounds(400, 165, 90, 20);
-        cancelButton.addActionListener(this::cancelClicked);
+        cancelButton.addActionListener(e1 -> cancelClicked());
         add(cancelButton);
 
         JButton okButton = new JButton("Ok");
         okButton.setBounds(500, 165, 90, 20);
-        okButton.addActionListener(this::okClicked);
+        okButton.addActionListener(e -> okClicked());
         add(okButton);
 
         errorText.setBounds(100, 150, 125, 25);
@@ -89,11 +89,11 @@ public class OrderAddDialog extends JDialog implements ActionListener {
         setDefaultCloseOperation(HIDE_ON_CLOSE);
     }
 
-    public void cancelClicked(ActionEvent e) {
+    public void cancelClicked() {
         dispose();
     }
 
-    public void okClicked(ActionEvent e){
+    public void okClicked(){
         if(Objects.equals(customerIdText.getText(), "") || productButtons.isEmpty()){
             dispose();
         } else {
@@ -112,7 +112,7 @@ public class OrderAddDialog extends JDialog implements ActionListener {
     }
 
 
-    public void stockItemIdClicked(ActionEvent e){
+    public void stockItemIdClicked(){
         try{
             Integer id = Integer.valueOf(stockItemIdText.getText());
             JPanel productPanel = new JPanel();

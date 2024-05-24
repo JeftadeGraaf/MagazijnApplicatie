@@ -1,4 +1,4 @@
-package groep4.MagazijnApplicatie.entity;
+package groep4.magazijnApplicatie.entity;
 
 import java.util.ArrayList;
 import java.util.Collections;

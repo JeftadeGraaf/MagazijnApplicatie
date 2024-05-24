@@ -1,3 +1,3 @@
-package groep4.MagazijnApplicatie.entity;
+package groep4.magazijnApplicatie.entity;
 
 public record OrderLine(int orderID, StockItem stockItem) {}

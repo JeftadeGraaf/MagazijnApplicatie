@@ -1,4 +1,4 @@
-package groep4.MagazijnApplicatie;
+package groep4.magazijnApplicatie;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

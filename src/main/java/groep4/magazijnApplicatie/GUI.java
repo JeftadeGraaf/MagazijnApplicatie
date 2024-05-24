@@ -1,14 +1,12 @@
-package groep4.MagazijnApplicatie;
+package groep4.magazijnApplicatie;
 
-import groep4.MagazijnApplicatie.entity.Box;
-import groep4.MagazijnApplicatie.entity.StockItem;
-import com.fazecast.jSerialComm.SerialPort;
-import groep4.MagazijnApplicatie.database.DatabaseManager;
-import groep4.MagazijnApplicatie.entity.OrderLine;
+import groep4.magazijnApplicatie.entity.Box;
+import groep4.magazijnApplicatie.entity.StockItem;
+import groep4.magazijnApplicatie.database.DatabaseManager;
+import groep4.magazijnApplicatie.entity.OrderLine;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -18,15 +16,14 @@ public class GUI extends JFrame {
     private final JLabel status;
 
     private int loadedOrderID = -1;
-    private Color statusColor = Color.red;
     private String tspRoute;
 
-    private OrderBijhouderPanel orderBijhouder;
-    private RobotLocatieGUI robotLocatie;
-    private RealtimeLocationPanel realtimeLocation;
+    private final OrderBijhouderPanel orderBijhouder;
+    private final RobotLocatieGUI robotLocatie;
+    private final RealtimeLocationPanel realtimeLocation;
 
-    private DatabaseManager databaseManager;
-    private SerialManager serialManager;
+    private final DatabaseManager databaseManager;
+    private final SerialManager serialManager;
     private ArrayList<OrderLine> orderLines = new ArrayList<>();
 
     public GUI(DatabaseManager databaseManager) {
@@ -84,17 +81,17 @@ public class GUI extends JFrame {
         orderVerwerken.setEnabled(false);
         status.setBounds(500,525,200,25);
         status.setFont(new Font("Calibri", Font.BOLD, 20));
-        orderInladen.addActionListener(this::clickedOrderLoad);
-        orderAanpassen.addActionListener(this::clickedOrderChange);
-        orderAanmaken.addActionListener(this::clickedOrderAdded);
-        orderVerwerken.addActionListener(this::clickedOrderProcess);
-        voorraadBeheer.addActionListener(this::clickedManageStock);
+        orderInladen.addActionListener(e4 -> clickedOrderLoad());
+        orderAanpassen.addActionListener(e3 -> clickedOrderChange());
+        orderAanmaken.addActionListener(e2 -> clickedOrderAdded());
+        orderVerwerken.addActionListener(e1 -> clickedOrderProcess());
+        voorraadBeheer.addActionListener(e -> clickedManageStock());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
 
 
-    public void clickedOrderLoad(ActionEvent e){
+    public void clickedOrderLoad(){
         OrderIDInvullenDialog order = new OrderIDInvullenDialog(this, true);
         loadedOrderID = order.getOrderID();
         orderLines = databaseManager.getOrderLines(loadedOrderID);
@@ -113,7 +110,7 @@ public class GUI extends JFrame {
         orderBijhouder.repaint();
     }
 
-    public void clickedOrderChange(ActionEvent e){
+    public void clickedOrderChange(){
         if(loadedOrderID != 0){
             orderLines = databaseManager.getOrderLines(loadedOrderID);
             new OrderUpdateDialog(this, true, loadedOrderID, orderLines, databaseManager);
@@ -122,7 +119,7 @@ public class GUI extends JFrame {
         orderBijhouder.repaint();
     }
 
-    public void clickedOrderAdded(ActionEvent e){
+    public void clickedOrderAdded(){
         OrderAddDialog addDialog = new OrderAddDialog(this, true, databaseManager, loadedOrderID);
         loadedOrderID = addDialog.getOrderId();
         orderLines = databaseManager.getOrderLines(loadedOrderID);
@@ -130,7 +127,7 @@ public class GUI extends JFrame {
         orderBijhouder.repaint();
     }
 
-    public void clickedOrderProcess(ActionEvent e) {
+    public void clickedOrderProcess() {
         if (serialManager == null) {
             JOptionPane.showMessageDialog(this, "Geen verbinding met robot mogelijk.", "Fout", JOptionPane.ERROR_MESSAGE);
         }
@@ -145,20 +142,20 @@ public class GUI extends JFrame {
         for (int i = 0; i < calculatedBoxes.size(); i++) {
             new PDFFactory(calculatedBoxes.get(i), info[0], info[1], info[2], info[3], info[4], databaseManager, i + 1, calculatedBoxes.size());
         }
+        assert serialManager != null;
         serialManager.sendMessage(tspRoute);
     }
 
-    public void clickedManageStock(ActionEvent e){
+    public void clickedManageStock(){
         new StockUpdateDialog(this, true, databaseManager);
         orderLines = databaseManager.getOrderLines(loadedOrderID);
         robotLocatie.repaint();
         orderBijhouder.repaint();
     }
 
-    public void changeStatus(String newStatus, Color color){
+    public void changeStatus(String newStatus){
         System.out.println(newStatus);
         status.setText("Status: " + newStatus);
-        statusColor = color;
         orderBijhouder.repaint();
     }
 

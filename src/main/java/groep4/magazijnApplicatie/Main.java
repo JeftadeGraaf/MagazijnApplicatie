@@ -1,6 +1,6 @@
-package groep4.MagazijnApplicatie;
+package groep4.magazijnApplicatie;
 
-import groep4.MagazijnApplicatie.database.DatabaseManager;
+import groep4.magazijnApplicatie.database.DatabaseManager;
 
 import javax.swing.*;
 import java.sql.SQLException;

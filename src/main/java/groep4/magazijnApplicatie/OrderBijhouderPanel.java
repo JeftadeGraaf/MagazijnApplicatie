@@ -1,9 +1,9 @@
-package groep4.MagazijnApplicatie;
+package groep4.magazijnApplicatie;
 
-import groep4.MagazijnApplicatie.database.DatabaseManager;
-import groep4.MagazijnApplicatie.entity.OrderLine;
-import groep4.MagazijnApplicatie.entity.Box;
-import groep4.MagazijnApplicatie.entity.StockItem;
+import groep4.magazijnApplicatie.database.DatabaseManager;
+import groep4.magazijnApplicatie.entity.OrderLine;
+import groep4.magazijnApplicatie.entity.Box;
+import groep4.magazijnApplicatie.entity.StockItem;
 
 import javax.swing.*;
 import java.awt.*;

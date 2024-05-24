@@ -1,7 +1,7 @@
-package groep4.MagazijnApplicatie.database;
+package groep4.magazijnApplicatie.database;
 
-import groep4.MagazijnApplicatie.entity.OrderLine;
-import groep4.MagazijnApplicatie.entity.StockItem;
+import groep4.magazijnApplicatie.entity.OrderLine;
+import groep4.magazijnApplicatie.entity.StockItem;
 
 import java.sql.*;
 import java.util.ArrayList;

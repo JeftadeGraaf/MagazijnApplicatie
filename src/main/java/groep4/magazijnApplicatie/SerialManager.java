@@ -1,11 +1,10 @@
-package groep4.MagazijnApplicatie;
+package groep4.magazijnApplicatie;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
 import javax.swing.*;
-import java.awt.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -13,14 +12,6 @@ public class SerialManager implements SerialPortDataListener {
     private SerialPort comPort = null;
     private final StringBuilder messageBuffer = new StringBuilder();
     private final GUI gui;
-
-    public SerialManager(GUI gui, SerialPort comPort) {
-        this.gui = gui;
-        this.comPort = comPort;
-        this.comPort.setBaudRate(115200);
-        this.comPort.openPort();
-        this.comPort.addDataListener(this);
-    }
 
     public SerialManager(GUI gui){
         this.gui = gui;
@@ -87,16 +78,16 @@ public class SerialManager implements SerialPortDataListener {
     private void handleStatusMessage(String message) {
         switch (message.charAt(1)) {
             case 'g':
-                gui.changeStatus("automatisch", Color.green);
+                gui.changeStatus("automatisch");
                 break;
             case 'r':
-                gui.changeStatus("noodstop", Color.red);
+                gui.changeStatus("noodstop");
                 break;
             case 'o':
-                gui.changeStatus("handmatig", Color.orange);
+                gui.changeStatus("handmatig");
                 break;
             case 'b':
-                gui.changeStatus("kalibratie", Color.blue);
+                gui.changeStatus("kalibratie");
                 break;
             default:
                 System.out.println("Unknown status type: " + message.charAt(1));
@@ -118,7 +109,6 @@ public class SerialManager implements SerialPortDataListener {
                 System.out.println("Invalid location message format: " + message);
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();
             System.out.println("Invalid location coordinates: " + message);
         }
     }
@@ -127,8 +117,8 @@ public class SerialManager implements SerialPortDataListener {
         try {
             message = message.substring(1);
             String[] location = message.split(",");
-            for (int i = 0; i < location.length; i++) {
-                System.out.println(location[i]);
+            for (String s : location) {
+                System.out.println(s);
             }
             if (location.length == 2) {
                 int x = Integer.parseInt(location[0]);
@@ -139,7 +129,6 @@ public class SerialManager implements SerialPortDataListener {
                 System.out.println("Invalid retrieved package message format: " + message);
             }
         } catch (NumberFormatException e) {
-            e.printStackTrace();
             System.out.println("Invalid retrieved package coordinates: " + message);
         }
     }

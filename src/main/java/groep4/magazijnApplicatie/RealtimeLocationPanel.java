@@ -1,4 +1,4 @@
-package groep4.MagazijnApplicatie;
+package groep4.magazijnApplicatie;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +9,7 @@ public class RealtimeLocationPanel extends JPanel {
     private int xCoordinate;
     private int yCoordinate;
 
-    private ArrayList<int[]> retrievedProducts = new ArrayList<int[]>();
+    private final ArrayList<int[]> retrievedProducts = new ArrayList<>();
 
     @Override
     protected void paintComponent(Graphics g) {
