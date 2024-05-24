@@ -4,12 +4,13 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
+import javax.swing.*;
 import java.awt.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SerialManager implements SerialPortDataListener {
-    private final SerialPort comPort;
+    private SerialPort comPort = null;
     private final StringBuilder messageBuffer = new StringBuilder();
     private final GUI gui;
 
@@ -23,10 +24,15 @@ public class SerialManager implements SerialPortDataListener {
 
     public SerialManager(GUI gui){
         this.gui = gui;
-        this.comPort = SerialPort.getCommPorts()[0];
-        this.comPort.setBaudRate(115200);
-        this.comPort.openPort();
-        this.comPort.addDataListener(this);
+        try {
+            this.comPort = SerialPort.getCommPorts()[0];
+            this.comPort.setBaudRate(115200);
+            this.comPort.openPort();
+            this.comPort.addDataListener(this);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(null, "Geen verbinding met robot mogelijk.", "Fout", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        }
     }
 
     @Override
