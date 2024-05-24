@@ -117,6 +117,7 @@ public class OrderAddDialog extends JDialog implements ActionListener {
             Integer id = Integer.valueOf(stockItemIdText.getText());
             int size = productButtons.size();
             JPanel productPanel = new JPanel();
+            productPanel.setLayout(new BorderLayout());
             productPanels.add(productPanel);
             productPanel.setBorder(blackLine);
             productsPanel.add(productPanel);
@@ -129,7 +130,7 @@ public class OrderAddDialog extends JDialog implements ActionListener {
             trashCanButton.setBounds(200, 0, 30, 30);
             trashCanButton.setFont(new Font("monospace", Font.PLAIN, 25));
             trashCanButton.addActionListener(this);
-            productPanel.add(trashCanButton);
+            productPanel.add(trashCanButton, BorderLayout.EAST);
             productButtons.add(trashCanButton);
             productIds.add(id);
 
