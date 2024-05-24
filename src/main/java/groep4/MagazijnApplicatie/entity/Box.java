@@ -1,31 +1,25 @@
 package groep4.MagazijnApplicatie.entity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class Box {
-    private ArrayList<StockItem> productlist;
+public record Box(List<StockItem> productlist, int capacity) {
 
-    private final int capacity;
-
-    public Box(ArrayList<StockItem> productlist, int capacity){
-        setProductlist(productlist);
+    public Box(List<StockItem> productlist, int capacity) {
+        this.productlist = new ArrayList<>(productlist); // Ensure the list is mutable and local
         this.capacity = capacity;
     }
 
-    public int getRemainingCapacity(){
-        int totalWeight = 0;
-        for(StockItem item : productlist){
-            totalWeight += item.weight();
-        }
+    public List<StockItem> getProductlist() {
+        return Collections.unmodifiableList(productlist);
+    }
+
+    public int getRemainingCapacity() {
+        int totalWeight = productlist.stream()
+                .mapToInt(StockItem::weight)
+                .sum();
         return capacity - totalWeight;
-    }
-
-    public void setProductlist(ArrayList<StockItem> productlist) {
-        this.productlist = productlist;
-    }
-
-    public ArrayList<StockItem> getProductlist() {
-        return productlist;
     }
 
     public void addItem(StockItem item) {

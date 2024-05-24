@@ -8,6 +8,7 @@ import groep4.MagazijnApplicatie.entity.StockItem;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class OrderBijhouderPanel extends JPanel {
 
@@ -62,7 +63,7 @@ public class OrderBijhouderPanel extends JPanel {
             g.drawString("Doos " + (i+1), x, y);
             y+= 20;
             g.setFont(defaultFont);
-            ArrayList<StockItem> itemsInBox = boxList.get(i).getProductlist();
+            List<StockItem> itemsInBox = boxList.get(i).getProductlist();
             for (StockItem inBox : itemsInBox) {
                 String itemName = databaseManager.getProductName(inBox.stockItemID());
                 if (inBox.x() == 0) {
