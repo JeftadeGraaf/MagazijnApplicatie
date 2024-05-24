@@ -4,12 +4,13 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
+import javax.swing.*;
 import java.awt.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class SerialManager implements SerialPortDataListener {
-    private final SerialPort comPort;
+    private SerialPort comPort = null;
     private final StringBuilder messageBuffer = new StringBuilder();
     private final GUI gui;
 
@@ -23,10 +24,15 @@ public class SerialManager implements SerialPortDataListener {
 
     public SerialManager(GUI gui){
         this.gui = gui;
-        this.comPort = SerialPort.getCommPorts()[0];
-        this.comPort.setBaudRate(115200);
-        this.comPort.openPort();
-        this.comPort.addDataListener(this);
+        try {
+            this.comPort = SerialPort.getCommPorts()[0];
+            this.comPort.setBaudRate(115200);
+            this.comPort.openPort();
+            this.comPort.addDataListener(this);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            JOptionPane.showMessageDialog(null, "Geen verbinding met robot mogelijk.", "Fout", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        }
     }
 
     @Override
@@ -65,6 +71,9 @@ public class SerialManager implements SerialPortDataListener {
                             break;
                         case 'l':
                             handleLocationMessage(message);
+                            break;
+                        case 'p':
+                            handleRetrievedPackageMessage(message);
                             break;
                         default:
                             System.out.println("Unknown message type: " + testChar);
@@ -111,6 +120,27 @@ public class SerialManager implements SerialPortDataListener {
         } catch (NumberFormatException e) {
             e.printStackTrace();
             System.out.println("Invalid location coordinates: " + message);
+        }
+    }
+
+    private void handleRetrievedPackageMessage(String message){
+        try {
+            message = message.substring(1);
+            String[] location = message.split(",");
+            for (int i = 0; i < location.length; i++) {
+                System.out.println(location[i]);
+            }
+            if (location.length == 2) {
+                int x = Integer.parseInt(location[0]);
+                int y = Integer.parseInt(location[1].trim());
+                gui.getRealtimeLocation().addRetrievedProduct(x,y);
+                gui.getRealtimeLocation().repaint();
+            } else {
+                System.out.println("Invalid retrieved package message format: " + message);
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            System.out.println("Invalid retrieved package coordinates: " + message);
         }
     }
 

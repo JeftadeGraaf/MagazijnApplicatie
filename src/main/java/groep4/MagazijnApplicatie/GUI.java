@@ -107,10 +107,7 @@ public class GUI extends JFrame {
         } else {
             orderVerwerken.setEnabled(true);
             orderAanpassen.setEnabled(true);
-        }
-        System.out.println("GUI:");
-        for (OrderLine orderLine : orderLines){
-            System.out.println(orderLine.stockItem().stockItemID());
+            realtimeLocation.clearRetrievedProducts();
         }
         robotLocatie.repaint();
         orderBijhouder.repaint();
@@ -134,6 +131,9 @@ public class GUI extends JFrame {
     }
 
     public void clickedOrderProcess(ActionEvent e) {
+        if (serialManager == null) {
+            JOptionPane.showMessageDialog(this, "Geen verbinding met robot mogelijk.", "Fout", JOptionPane.ERROR_MESSAGE);
+        }
         ArrayList<StockItem> productList = new ArrayList<>();
         for (OrderLine orderLine : orderLines) {
             productList.add(orderLine.stockItem());
