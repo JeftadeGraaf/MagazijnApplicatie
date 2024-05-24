@@ -9,6 +9,7 @@ import groep4.MagazijnApplicatie.entity.OrderLine;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class GUI extends JFrame {
@@ -35,6 +36,9 @@ public class GUI extends JFrame {
         setLayout(null);
         setSize(1000, 650);
         setTitle("HMI Applicatie");
+        URL imgURL = getClass().getResource("/Icon_Nerdygadgets.png");
+        assert imgURL != null;
+        setIconImage(new ImageIcon(imgURL).getImage());
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         orderAanpassen = new JButton("Order aanpassen");
