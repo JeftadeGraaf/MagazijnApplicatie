@@ -106,13 +106,16 @@ public class StockUpdateDialog extends JDialog implements ActionListener {
             scrollFrame.add(label, gbc);
             gbc.anchor = GridBagConstraints.EAST;
             if(item.stockItemID() != 0){
-                JButton button = new JButton("Verwijder");
-                button.setHorizontalAlignment(SwingConstants.RIGHT);
-                buttonArray.add(button);
+                JButton trashCanButton = new JButton("\uD83D\uDDD1");
+                trashCanButton.setBounds(200, 0, 30, 30);
+                trashCanButton.setFont(new Font("monospace", Font.PLAIN, 25));
+                trashCanButton.addActionListener(this);
+                trashCanButton.setHorizontalAlignment(SwingConstants.RIGHT);
+                buttonArray.add(trashCanButton);
                 gbc.gridx = 8;
                 gbc.gridwidth = 1;
-                scrollFrame.add(button, gbc);
-                button.addActionListener(this);
+                scrollFrame.add(trashCanButton, gbc);
+                trashCanButton.addActionListener(this);
             }
             rowHeight++;
         }
