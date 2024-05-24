@@ -130,6 +130,9 @@ public class GUI extends JFrame {
     }
 
     public void clickedOrderProcess(ActionEvent e) {
+        if (serialManager == null) {
+            JOptionPane.showMessageDialog(this, "Geen verbinding met robot mogelijk.", "Fout", JOptionPane.ERROR_MESSAGE);
+        }
         ArrayList<StockItem> productList = new ArrayList<>();
         for (OrderLine orderLine : orderLines) {
             productList.add(orderLine.stockItem());
