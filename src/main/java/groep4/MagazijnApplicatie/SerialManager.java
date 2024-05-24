@@ -16,7 +16,7 @@ public class SerialManager implements SerialPortDataListener {
     public SerialManager(GUI gui, SerialPort comPort) {
         this.gui = gui;
         this.comPort = comPort;
-        this.comPort.setBaudRate(9600);
+        this.comPort.setBaudRate(115200);
         this.comPort.openPort();
         this.comPort.addDataListener(this);
     }
@@ -24,7 +24,7 @@ public class SerialManager implements SerialPortDataListener {
     public SerialManager(GUI gui){
         this.gui = gui;
         this.comPort = SerialPort.getCommPorts()[0];
-        this.comPort.setBaudRate(9600);
+        this.comPort.setBaudRate(115200);
         this.comPort.openPort();
         this.comPort.addDataListener(this);
     }
@@ -61,34 +61,56 @@ public class SerialManager implements SerialPortDataListener {
                     char testChar = message.charAt(0);
                     switch (testChar) {
                         case 's':
-                            switch (message.charAt(1)) {
-                                case 'g':
-                                    gui.changeStatus("automatisch", Color.green);
-                                    break;
-                                case 'r':
-                                    gui.changeStatus("noodstop", Color.red);
-                                    break;
-                                case 'o':
-                                    gui.changeStatus("handmatig", Color.orange);
-                                    break;
-                                case 'b':
-                                    gui.changeStatus("kalibratie", Color.blue);
-                                    break;
-                                default:
-                                    break;
-                            }
+                            handleStatusMessage(message);
                             break;
                         case 'l':
-                            message = message.substring(1);
-                            String[] location = message.split(",");
-                            gui.setRobotXCoordinate(Integer.parseInt(location[0]));
-                            gui.setRobotYCoordinate(Integer.parseInt(location[1]));
+                            handleLocationMessage(message);
                             break;
                         default:
+                            System.out.println("Unknown message type: " + testChar);
                             break;
                     }
                 }
             }
+        }
+    }
+
+    private void handleStatusMessage(String message) {
+        switch (message.charAt(1)) {
+            case 'g':
+                gui.changeStatus("automatisch", Color.green);
+                break;
+            case 'r':
+                gui.changeStatus("noodstop", Color.red);
+                break;
+            case 'o':
+                gui.changeStatus("handmatig", Color.orange);
+                break;
+            case 'b':
+                gui.changeStatus("kalibratie", Color.blue);
+                break;
+            default:
+                System.out.println("Unknown status type: " + message.charAt(1));
+                break;
+        }
+    }
+
+    private void handleLocationMessage(String message) {
+        try {
+            message = message.substring(1);
+            String[] location = message.split(",");
+            if (location.length == 2) {
+//                System.err.println(location[1]);
+                int x = Integer.parseInt(location[0]);
+                int y = Integer.parseInt(location[1].trim());
+                gui.getRealtimeLocation().setCoordinates(x, y);
+//                System.out.println("Location updated: X=" + x + ", Y=" + y);
+            } else {
+                System.out.println("Invalid location message format: " + message);
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            System.out.println("Invalid location coordinates: " + message);
         }
     }
 
