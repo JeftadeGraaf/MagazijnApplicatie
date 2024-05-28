@@ -131,7 +131,7 @@ public class PDFFactory {
         Font whiteFont = new Font(Font.FontFamily.HELVETICA, 11, Font.NORMAL, new BaseColor(255, 255, 255));
         Phrase info = new Phrase("""
                 Nerdygadgets.com
-                Nerdyweg 69
+                Nerdyweg 34
                 4200 NG Gadgetsdorp
                 0612345678
                 nerdygadgets@gmail.com
