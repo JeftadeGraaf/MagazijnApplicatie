@@ -14,6 +14,7 @@ public class RealtimeLocationPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        g.setColor(Color.blue);
         drawRobot(xCoordinate, yCoordinate, g);
         drawRetrievedProducts(g);
     }
@@ -26,7 +27,7 @@ public class RealtimeLocationPanel extends JPanel {
 
     public void drawRobot(int x, int y, Graphics g){
         if(xCoordinate < 1207){
-            g.fillOval( 375, 310, 20,20);
+            g.fillOval( 378, 330, 20,20);
             return;
         }
         if(yCoordinate < 60){
