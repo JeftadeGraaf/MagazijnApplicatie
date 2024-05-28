@@ -212,6 +212,16 @@ public class DatabaseManager {
             statement.setInt(1, xCoord);
             statement.setInt(2, yCoord);
             statement.executeUpdate();
+
+            statement = connection.prepareStatement("UPDATE `StockItemHoldings` AS SIH\n" +
+                    "JOIN warehouse_rack AS WHR\n" +
+                    "ON SIH.StockItemID = WHR.itemID\n" +
+                    "SET QuantityOnHand = QuantityOnHand - 1\n" +
+                    "WHERE WHR.locationX = ?\n" +
+                    "AND WHR.locationY = ?;");
+            statement.setInt(1, xCoord);
+            statement.setInt(2, yCoord);
+            statement.executeUpdate();
         } catch (SQLException ignored) {
         }
     }
