@@ -3,6 +3,7 @@ package groep4.magazijnApplicatie;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+import groep4.magazijnApplicatie.database.DatabaseManager;
 
 import javax.swing.*;
 
@@ -13,8 +14,11 @@ public class SerialManager implements SerialPortDataListener {
     private final StringBuilder messageBuffer = new StringBuilder();
     private final GUI gui;
 
-    public SerialManager(GUI gui){
+    private final DatabaseManager databaseManager;
+
+    public SerialManager(GUI gui, DatabaseManager databaseManager){
         this.gui = gui;
+        this.databaseManager = databaseManager;
         try {
             this.comPort = SerialPort.getCommPorts()[0];
             this.comPort.setBaudRate(115200);
@@ -125,6 +129,7 @@ public class SerialManager implements SerialPortDataListener {
                 int y = Integer.parseInt(location[1].trim());
                 gui.getRealtimeLocation().addRetrievedProduct(x,y);
                 gui.getRealtimeLocation().repaint();
+                databaseManager.removeItemFromStock(x, y);
             } else {
                 System.out.println("Invalid retrieved package message format: " + message);
             }

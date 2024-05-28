@@ -204,4 +204,15 @@ public class DatabaseManager {
         } catch (SQLException ignored) {
         }
     }
+
+    public void removeItemFromStock(int xCoord, int yCoord){
+        try {
+            // Language=MySQL
+            PreparedStatement statement = connection.prepareStatement("UPDATE `warehouse_rack` SET `itemID` = null WHERE `locationX` = ? AND locationY = ?");
+            statement.setInt(1, xCoord);
+            statement.setInt(2, yCoord);
+            statement.executeUpdate();
+        } catch (SQLException ignored) {
+        }
+    }
 }

@@ -28,8 +28,7 @@ public class GUI extends JFrame {
 
     public GUI(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
-
-        serialManager = new SerialManager(this);
+        serialManager = new SerialManager(this, databaseManager);
         setLayout(null);
         setSize(1000, 650);
         setTitle("HMI Applicatie");
